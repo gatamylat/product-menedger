@@ -1,5 +1,5 @@
 // Service Worker для офлайн работы
-const CACHE_NAME = 'product-manager-v2.0'; // ВАЖНО: увеличиваем версию при каждом обновлении!
+const CACHE_NAME = 'product-manager-v2.1'; // Обновлена версия для Telegram функции
 const CACHE_PREFIX = 'product-manager-'; // Префикс для нашего приложения
 
 // Определяем текущий URL и базовый путь
