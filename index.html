@@ -159,20 +159,21 @@
             max-width: 1400px;
             margin: 0 auto 40px;
             padding: 0 24px;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
         .table-wrapper {
             background: var(--background);
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-md);
-            overflow: hidden;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
+            min-width: 800px; /* Минимальная ширина для скролла */
         }
 
         thead {
@@ -424,6 +425,93 @@
             opacity: 0.5;
         }
 
+        /* FAB меню для мобильной версии */
+        .fab-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            display: none;
+        }
+
+        .fab-main {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            color: white;
+            border: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .fab-main.active {
+            transform: rotate(45deg);
+            background: var(--braun-orange);
+        }
+
+        .fab-menu {
+            position: absolute;
+            bottom: 70px;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            opacity: 0;
+            transform: scale(0.8) translateY(20px);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .fab-menu.active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            pointer-events: all;
+        }
+
+        .fab-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .fab-label {
+            background: var(--text-primary);
+            color: var(--background);
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .fab-btn {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--background);
+            color: var(--text-primary);
+            border: 1px solid var(--border-light);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .fab-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
         /* Адаптивность */
         @media (max-width: 768px) {
             .header-content {
@@ -432,6 +520,14 @@
 
             h1 {
                 font-size: 24px;
+            }
+
+            .header .btn-group {
+                display: none; /* Скрываем кнопки в шапке на мобильных */
+            }
+
+            .fab-container {
+                display: block; /* Показываем FAB на мобильных */
             }
 
             .toolbar {
@@ -690,18 +786,22 @@
                     <div class="form-group">
                         <label class="form-label">Артикул</label>
                         <input type="text" class="form-input" id="productArticle" 
-                               placeholder="XX-XX-XX-XX" pattern="\d{2}-\d{2}-\d{2}-\d{2}">
+                               placeholder="XX-XX-XX-XX или любой другой формат">
                     </div>
                     <div class="form-group">
                         <label class="form-label">Характеристики</label>
                         <textarea class="form-textarea" id="productCharacteristics"></textarea>
                     </div>
                     <div class="form-group">
-                        <label class="form-label">Вопросы</label>
-                        <div id="questionsList" class="question-list"></div>
-                        <button type="button" class="add-question-btn" onclick="app.addQuestion()">
-                            + Добавить вопрос
-                        </button>
+                        <label class="form-label">Вопросы (каждый с новой строки)</label>
+                        <textarea class="form-textarea" id="productQuestions" 
+                                  placeholder="Введите вопросы, каждый с новой строки:
+Вопрос 1
+Вопрос 2
+Вопрос 3" style="min-height: 150px;"></textarea>
+                        <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                            Каждая новая строка будет отдельным вопросом с чекбоксом
+                        </small>
                     </div>
                     <div class="form-group" id="customFieldsContainer">
                         <!-- Кастомные поля будут добавлены динамически -->
@@ -744,6 +844,51 @@
 
     <!-- Статус бар -->
     <div class="status-bar" id="statusBar"></div>
+
+    <!-- FAB меню для мобильных -->
+    <div class="fab-container">
+        <div class="fab-menu" id="fabMenu">
+            <div class="fab-item">
+                <span class="fab-label">Добавить изделие</span>
+                <button class="fab-btn" onclick="app.showAddModal(); app.toggleFab();">
+                    <span>➕</span>
+                </button>
+            </div>
+            <div class="fab-item">
+                <span class="fab-label">Столбцы</span>
+                <button class="fab-btn" onclick="app.showColumnManager(); app.toggleFab();">
+                    <span>⚙️</span>
+                </button>
+            </div>
+            <div class="fab-item">
+                <span class="fab-label">Экспорт CSV</span>
+                <button class="fab-btn" onclick="app.exportCSV(); app.toggleFab();">
+                    <span>📊</span>
+                </button>
+            </div>
+            <div class="fab-item">
+                <span class="fab-label">Экспорт HTML</span>
+                <button class="fab-btn" onclick="app.exportHTML(); app.toggleFab();">
+                    <span>📄</span>
+                </button>
+            </div>
+            <div class="fab-item">
+                <span class="fab-label">Backup</span>
+                <button class="fab-btn" onclick="app.backup(); app.toggleFab();">
+                    <span>💾</span>
+                </button>
+            </div>
+            <div class="fab-item">
+                <span class="fab-label">Restore</span>
+                <button class="fab-btn" onclick="app.restore(); app.toggleFab();">
+                    <span>📂</span>
+                </button>
+            </div>
+        </div>
+        <button class="fab-main" id="fabMain" onclick="app.toggleFab()">
+            <span>+</span>
+        </button>
+    </div>
 
     <!-- Скрытые элементы для импорта -->
     <input type="file" id="csvImport" accept=".csv" style="display: none" onchange="app.handleCSVImport(event)">
@@ -863,15 +1008,28 @@
                     document.getElementById('productArticle').value = product.article;
                     document.getElementById('productCharacteristics').value = product.characteristics;
                     
-                    // Загрузка вопросов
-                    this.renderQuestions(product.questions || {});
+                    // Загрузка вопросов в текстовое поле
+                    if (product.questions) {
+                        const questionsText = Object.keys(product.questions).join('\n');
+                        document.getElementById('productQuestions').value = questionsText;
+                    } else {
+                        document.getElementById('productQuestions').value = '';
+                    }
                     
                     // Загрузка кастомных полей
                     this.renderCustomFields(product.customFields || {});
+                    
+                    // Загрузка превью изображений
+                    if (product.images && product.images.length > 0) {
+                        const preview = document.getElementById('imagePreview');
+                        preview.innerHTML = product.images.map(img => 
+                            `<img src="${img}" class="image-thumb">`
+                        ).join('');
+                    }
                 } else {
                     document.getElementById('modalTitle').textContent = 'Добавить изделие';
                     form.reset();
-                    document.getElementById('questionsList').innerHTML = '';
+                    document.getElementById('productQuestions').value = '';
                     document.getElementById('imagePreview').innerHTML = '';
                 }
                 
@@ -934,36 +1092,6 @@
                     };
                     reader.readAsDataURL(file);
                 });
-            },
-
-            // Добавить вопрос
-            addQuestion() {
-                const list = document.getElementById('questionsList');
-                const item = document.createElement('div');
-                item.className = 'question-item';
-                item.innerHTML = `
-                    <input type="checkbox" class="question-checkbox">
-                    <input type="text" class="form-input question-text" placeholder="Введите вопрос...">
-                    <button class="btn" onclick="this.parentElement.remove()">✕</button>
-                `;
-                list.appendChild(item);
-            },
-
-            // Рендер вопросов
-            renderQuestions(questions) {
-                const list = document.getElementById('questionsList');
-                list.innerHTML = '';
-                
-                for (let [question, checked] of Object.entries(questions)) {
-                    const item = document.createElement('div');
-                    item.className = 'question-item';
-                    item.innerHTML = `
-                        <input type="checkbox" class="question-checkbox" ${checked ? 'checked' : ''}>
-                        <input type="text" class="form-input question-text" value="${question}">
-                        <button class="btn" onclick="this.parentElement.remove()">✕</button>
-                    `;
-                    list.appendChild(item);
-                }
             },
 
             // Рендер кастомных полей
@@ -1080,14 +1208,16 @@
 
             // Рендер строки таблицы
             renderRow(product) {
-                let imagesHtml = '<div class="image-cell">';
+                // Изображения
+                let imagesHtml = '<td><div class="image-cell">';
                 if (product.images && product.images.length > 0) {
                     product.images.forEach((img, index) => {
                         imagesHtml += `<img src="${img}" class="image-thumb" onclick="app.showGallery('${product.id}', ${index})">`;
                     });
                 }
-                imagesHtml += `<div class="add-image-btn" onclick="app.addImageToProduct('${product.id}')">+</div></div>`;
+                imagesHtml += `<div class="add-image-btn" onclick="app.addImageToProduct('${product.id}')">+</div></div></td>`;
                 
+                // Вопросы
                 let questionsHtml = '<div class="checkbox-container">';
                 if (product.questions) {
                     for (let [question, checked] of Object.entries(product.questions)) {
@@ -1130,6 +1260,33 @@
                         </td>
                     </tr>
                 `;
+            },
+            
+            // Добавление изображения к существующему продукту
+            addImageToProduct(productId) {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.multiple = true;
+                input.onchange = async (e) => {
+                    const files = e.target.files;
+                    if (!files.length) return;
+                    
+                    const product = this.products.find(p => p.id === productId);
+                    if (!product.images) product.images = [];
+                    
+                    for (let file of files) {
+                        const optimized = await this.optimizeImage(file);
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            product.images.push(e.target.result);
+                            this.saveProduct(product);
+                            this.render();
+                        };
+                        reader.readAsDataURL(optimized);
+                    }
+                };
+                input.click();
             },
 
             // Инлайн редактирование
@@ -1300,27 +1457,45 @@
 
             // Экспорт в CSV
             exportCSV() {
-                let csv = 'Наименование,Артикул,Характеристики,Вопросы';
-                this.customColumns.forEach(col => csv += `,${col.name}`);
-                csv += '\n';
+                let csv = '\uFEFF'; // BOM для корректного отображения кириллицы в Excel
+                csv += 'Наименование,Артикул,Характеристики';
+                
+                // Добавляем кастомные столбцы
+                this.customColumns.forEach(col => {
+                    csv += `,${col.name}`;
+                });
+                csv += ',Вопросы\n';
                 
                 this.products.forEach(product => {
-                    const questions = Object.entries(product.questions || {})
-                        .map(([q, checked]) => `${q}: ${checked ? '✓' : '✗'}`)
-                        .join('; ');
-                    
+                    // Основные поля
                     let row = [
-                        product.name,
-                        product.article,
-                        product.characteristics,
-                        questions
+                        product.name || '',
+                        product.article || '',
+                        product.characteristics || ''
                     ];
                     
+                    // Кастомные поля
                     this.customColumns.forEach(col => {
                         row.push(product.customFields?.[col.id] || '');
                     });
                     
-                    csv += row.map(field => `"${field}"`).join(',') + '\n';
+                    // Вопросы - объединяем в одну ячейку
+                    const questions = [];
+                    if (product.questions) {
+                        for (let [q, checked] of Object.entries(product.questions)) {
+                            questions.push(`${q}: ${checked ? '✓' : '✗'}`);
+                        }
+                    }
+                    row.push(questions.join('; '));
+                    
+                    // Экранируем значения с запятыми и кавычками
+                    csv += row.map(field => {
+                        const str = String(field);
+                        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                            return `"${str.replace(/"/g, '""')}"`;
+                        }
+                        return str;
+                    }).join(',') + '\n';
                 });
                 
                 const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -1360,18 +1535,84 @@
                     <meta charset="UTF-8">
                     <title>Изделия проекта - ${new Date().toLocaleDateString()}</title>
                     <style>
-                        body { font-family: -apple-system, sans-serif; padding: 20px; }
-                        table { width: 100%; border-collapse: collapse; }
-                        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
-                        th { background: #f5f5f5; font-weight: 600; }
-                        .checked { color: green; }
-                        .unchecked { color: red; }
-                        img { max-width: 100px; height: auto; margin: 4px; }
+                        body { 
+                            font-family: -apple-system, sans-serif; 
+                            padding: 20px;
+                            background: #f5f5f5;
+                        }
+                        .header {
+                            background: white;
+                            padding: 20px;
+                            border-radius: 12px;
+                            margin-bottom: 20px;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                        }
+                        h1 { 
+                            color: #333;
+                            margin: 0 0 10px 0;
+                        }
+                        .date {
+                            color: #666;
+                            font-size: 14px;
+                        }
+                        table { 
+                            width: 100%; 
+                            border-collapse: collapse;
+                            background: white;
+                            border-radius: 12px;
+                            overflow: hidden;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                        }
+                        th, td { 
+                            padding: 12px; 
+                            text-align: left;
+                            border-bottom: 1px solid #e0e0e0;
+                        }
+                        th { 
+                            background: #f8f9fa; 
+                            font-weight: 600;
+                            color: #666;
+                            text-transform: uppercase;
+                            font-size: 12px;
+                            letter-spacing: 0.5px;
+                        }
+                        tr:hover {
+                            background: #f8f9fa;
+                        }
+                        .checked { 
+                            color: green; 
+                            font-weight: 500;
+                        }
+                        .unchecked { 
+                            color: #999; 
+                        }
+                        .question-item {
+                            margin: 4px 0;
+                        }
+                        .images {
+                            display: flex;
+                            gap: 8px;
+                            flex-wrap: wrap;
+                        }
+                        .images img { 
+                            width: 80px;
+                            height: 80px;
+                            object-fit: cover;
+                            border-radius: 8px;
+                            border: 1px solid #e0e0e0;
+                        }
+                        @media print {
+                            body { background: white; }
+                            .header { box-shadow: none; border: 1px solid #e0e0e0; }
+                            table { box-shadow: none; }
+                        }
                     </style>
                 </head>
                 <body>
-                    <h1>Изделия проекта</h1>
-                    <p>Дата экспорта: ${new Date().toLocaleString()}</p>
+                    <div class="header">
+                        <h1>Изделия проекта</h1>
+                        <div class="date">Дата экспорта: ${new Date().toLocaleString()}</div>
+                    </div>
                     <table>
                         <thead>
                             <tr>
@@ -1391,29 +1632,39 @@
                     html += '<tr>';
                     
                     // Изображения
-                    html += '<td>';
-                    if (product.images) {
+                    html += '<td><div class="images">';
+                    if (product.images && product.images.length > 0) {
                         product.images.forEach(img => {
-                            html += `<img src="${img}">`;
+                            html += `<img src="${img}" alt="Изображение">`;
                         });
+                    } else {
+                        html += '<span style="color: #999;">—</span>';
                     }
-                    html += '</td>';
+                    html += '</div></td>';
                     
                     html += `
-                        <td>${product.name}</td>
-                        <td>${product.article}</td>
-                        <td>${product.characteristics}</td>
+                        <td>${product.name || ''}</td>
+                        <td>${product.article || ''}</td>
+                        <td>${product.characteristics || ''}</td>
                     `;
                     
+                    // Кастомные столбцы
                     this.customColumns.forEach(col => {
-                        html += `<td>${product.customFields?.[col.id] || ''}</td>`;
+                        const value = product.customFields?.[col.id] || '';
+                        if (col.type === 'link' && value) {
+                            html += `<td><a href="${value}" target="_blank">${value}</a></td>`;
+                        } else if (col.type === 'image' && value) {
+                            html += `<td><img src="${value}" style="max-width: 100px; height: auto;"></td>`;
+                        } else {
+                            html += `<td>${value}</td>`;
+                        }
                     });
                     
                     // Вопросы
                     html += '<td>';
                     if (product.questions) {
                         for (let [question, checked] of Object.entries(product.questions)) {
-                            html += `<div class="${checked ? 'checked' : 'unchecked'}">
+                            html += `<div class="question-item ${checked ? 'checked' : 'unchecked'}">
                                 ${checked ? '✓' : '✗'} ${question}
                             </div>`;
                         }
@@ -1421,7 +1672,14 @@
                     html += '</td></tr>';
                 });
                 
-                html += '</tbody></table></body></html>';
+                html += `
+                        </tbody>
+                    </table>
+                    <div style="margin-top: 40px; padding: 20px; background: white; border-radius: 12px; text-align: center; color: #666;">
+                        <small>Сгенерировано системой управления изделиями</small>
+                    </div>
+                </body>
+                </html>`;
                 
                 const blob = new Blob([html], { type: 'text/html;charset=utf-8;' });
                 const link = document.createElement('a');
@@ -1507,6 +1765,14 @@
                 statusBar.classList.add('show');
                 setTimeout(() => statusBar.classList.remove('show'), 3000);
             },
+            
+            // Переключение FAB меню
+            toggleFab() {
+                const fabMain = document.getElementById('fabMain');
+                const fabMenu = document.getElementById('fabMenu');
+                fabMain.classList.toggle('active');
+                fabMenu.classList.toggle('active');
+            },
 
             // Регистрация Service Worker
             async registerServiceWorker() {
@@ -1543,14 +1809,20 @@
                 customFields: {}
             };
             
-            // Сохранение вопросов
-            document.querySelectorAll('#questionsList .question-item').forEach(item => {
-                const checkbox = item.querySelector('.question-checkbox');
-                const text = item.querySelector('.question-text');
-                if (text.value) {
-                    product.questions[text.value] = checkbox.checked;
-                }
-            });
+            // Парсинг вопросов из текстового поля
+            const questionsText = document.getElementById('productQuestions').value;
+            if (questionsText) {
+                const questions = questionsText.split('\n').filter(q => q.trim());
+                questions.forEach(question => {
+                    // Сохраняем состояние чекбокса если редактируем
+                    if (app.currentEditId) {
+                        const existingProduct = app.products.find(p => p.id === app.currentEditId);
+                        product.questions[question.trim()] = existingProduct.questions?.[question.trim()] || false;
+                    } else {
+                        product.questions[question.trim()] = false;
+                    }
+                });
+            }
             
             // Сохранение кастомных полей
             document.querySelectorAll('#customFieldsContainer input, #customFieldsContainer textarea').forEach(input => {
@@ -1559,9 +1831,24 @@
                 }
             });
             
+            // Сохранение изображений при редактировании
             if (app.currentEditId) {
                 const existingProduct = app.products.find(p => p.id === app.currentEditId);
                 product.images = existingProduct.images || [];
+            }
+            
+            // Добавление новых изображений
+            const fileInput = document.querySelector('input[type="file"][accept="image/*"]');
+            if (fileInput && fileInput.files.length > 0) {
+                for (let file of fileInput.files) {
+                    const optimized = await app.optimizeImage(file);
+                    const reader = new FileReader();
+                    const base64 = await new Promise(resolve => {
+                        reader.onload = e => resolve(e.target.result);
+                        reader.readAsDataURL(optimized);
+                    });
+                    product.images.push(base64);
+                }
             }
             
             await app.saveProduct(product);
