@@ -1,5 +1,5 @@
 // Service Worker для офлайн работы
-const CACHE_NAME = 'product-manager-v1.1'; // Обновил версию
+const CACHE_NAME = 'product-manager-v2.0'; // ВАЖНО: увеличиваем версию при каждом обновлении!
 const CACHE_PREFIX = 'product-manager-'; // Префикс для нашего приложения
 
 // Определяем текущий URL и базовый путь
@@ -80,39 +80,50 @@ self.addEventListener('activate', event => {
     );
 });
 
-// Обработка запросов
+// Обработка запросов - стратегия "сначала сеть, потом кэш"
 self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request)
-            .then(response => {
-                // Возвращаем кэшированный ответ если есть
-                if (response) {
+    // Для HTML файлов всегда пробуем загрузить свежую версию
+    if (event.request.mode === 'navigate' || event.request.url.includes('.html')) {
+        event.respondWith(
+            fetch(event.request)
+                .then(response => {
+                    // Если получили ответ из сети, кэшируем его
+                    const responseToCache = response.clone();
+                    caches.open(CACHE_NAME).then(cache => {
+                        cache.put(event.request, responseToCache);
+                    });
                     return response;
-                }
-
-                // Клонируем запрос
-                const fetchRequest = event.request.clone();
-
-                return fetch(fetchRequest).then(response => {
-                    // Проверяем валидность ответа
-                    if (!response || response.status !== 200 || response.type !== 'basic') {
+                })
+                .catch(() => {
+                    // Если сеть недоступна, берем из кэша
+                    return caches.match(event.request);
+                })
+        );
+    } else {
+        // Для остальных ресурсов - стандартная стратегия "кэш, потом сеть"
+        event.respondWith(
+            caches.match(event.request)
+                .then(response => {
+                    if (response) {
                         return response;
                     }
-
-                    // Клонируем ответ
-                    const responseToCache = response.clone();
-
-                    caches.open(CACHE_NAME)
-                        .then(cache => {
+                    return fetch(event.request).then(response => {
+                        // Проверяем валидность ответа
+                        if (!response || response.status !== 200 || response.type !== 'basic') {
+                            return response;
+                        }
+                        // Клонируем ответ для кэширования
+                        const responseToCache = response.clone();
+                        caches.open(CACHE_NAME).then(cache => {
                             cache.put(event.request, responseToCache);
                         });
-
-                    return response;
-                });
-            })
-            .catch(() => {
-                // Офлайн fallback
-                return new Response('Приложение работает в офлайн режиме');
-            })
-    );
+                        return response;
+                    });
+                })
+                .catch(() => {
+                    // Офлайн fallback
+                    return new Response('Приложение работает в офлайн режиме');
+                })
+        );
+    }
 });
