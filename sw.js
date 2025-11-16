@@ -1,5 +1,5 @@
 // Service Worker для офлайн работы
-const CACHE_NAME = 'product-manager-v2.2'; // Обновлена версия для исправления PWA
+const CACHE_NAME = 'product-manager-v2.3'; // Обновлена версия для карточного вида
 const CACHE_PREFIX = 'product-manager-'; // Префикс для нашего приложения
 
 // Определяем текущий URL и базовый путь
