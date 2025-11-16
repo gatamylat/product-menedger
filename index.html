@@ -8,10 +8,7 @@
     <meta name="theme-color" content="#ffffff">
     <title>Изделия проекта</title>
     
-    <!-- Фавикон эмодзи -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📒</text></svg>">
-    
-    <!-- PWA манифест и иконки -->
     <link rel="manifest" href="./manifest.json">
     <link rel="apple-touch-icon" href="./icon-192.png">
     <meta name="apple-mobile-web-app-title" content="Изделия">
@@ -49,7 +46,6 @@
             -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Шапка */
         .header {
             background: var(--background);
             border-bottom: 1px solid var(--border-light);
@@ -61,7 +57,7 @@
         }
 
         .header-content {
-            max-width: 100%; /* Полная ширина */
+            max-width: 100%;
             margin: 0 auto;
             padding: 16px 24px;
             display: flex;
@@ -77,7 +73,6 @@
             letter-spacing: -0.5px;
         }
 
-        /* Кнопки */
         .btn {
             background: var(--background);
             border: 1px solid var(--border-light);
@@ -119,11 +114,10 @@
             flex-wrap: wrap;
         }
 
-        /* Панель инструментов */
         .toolbar {
             background: var(--background);
             padding: 16px 24px;
-            max-width: 100%; /* Полная ширина */
+            max-width: 100%;
             margin: 24px;
             border-radius: var(--radius-lg);
             box-shadow: var(--shadow-sm);
@@ -159,11 +153,326 @@
             background: var(--background);
         }
 
-        /* Таблица */
+        .view-switcher {
+            display: flex;
+            gap: 4px;
+            background: var(--surface);
+            padding: 4px;
+            border-radius: var(--radius-sm);
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .view-btn.active {
+            background: var(--background);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Гибридный вид - карточки */
+        .products-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+            padding: 0 24px 40px;
+        }
+
+        .product-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .product-header {
+            background: #f8f9fa;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .product-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .product-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .product-article {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .product-content {
+            display: flex;
+            gap: 24px;
+            padding: 24px;
+        }
+
+        .product-left {
+            display: flex;
+            gap: 24px;
+            flex-wrap: wrap;
+        }
+
+        .product-images {
+            display: flex;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
+        .main-image-container {
+            position: relative;
+            width: 300px;
+            height: 300px;
+            flex-shrink: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+        }
+
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: pointer;
+        }
+
+        .delete-image-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid #ddd;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .main-image-container:hover .delete-image-btn {
+            opacity: 1;
+        }
+
+        .delete-image-btn:hover {
+            background: white;
+            color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .thumbnails-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .thumbnail-wrapper {
+            position: relative;
+            width: 100px;
+            height: 100px;
+        }
+
+        .image-thumb {
+            width: 100px;
+            height: 100px;
+            border-radius: 6px;
+            object-fit: cover;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .image-thumb:hover {
+            border-color: #007AFF;
+        }
+
+        .thumbnail-wrapper .delete-image-btn {
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            top: 4px;
+            right: 4px;
+        }
+
+        .add-image-btn {
+            width: 100px;
+            height: 100px;
+            border: 2px dashed #ddd;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: #fafafa;
+            font-size: 32px;
+            color: #999;
+            transition: all 0.2s;
+        }
+
+        .add-image-btn:hover {
+            border-color: #007AFF;
+            background: #f0f8ff;
+            color: #007AFF;
+        }
+
+        .product-info {
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            color: #333;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .product-questions {
+            flex: 1.5;
+            min-width: 350px;
+        }
+
+        .questions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .questions-title {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .questions-stats {
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .questions-stats.complete {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .questions-stats.partial {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .checkbox-container {
+            max-height: none;
+            overflow-y: visible;
+            padding-right: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 8px;
+            margin-bottom: 4px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .checkbox-item:hover {
+            background: #f8f9fa;
+        }
+
+        .checkbox {
+            margin-top: 2px;
+            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-blue);
+        }
+
+        .question-text {
+            flex: 1;
+            line-height: 1.5;
+            color: #333;
+            cursor: pointer;
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            transition: all 0.3s ease;
+        }
+
+        .question-text.expanded {
+            -webkit-line-clamp: unset;
+            color: var(--primary-blue);
+        }
+
+        .question-text:hover {
+            color: var(--primary-blue);
+        }
+
+        /* Табличный вид */
         .table-container {
-            max-width: 100%; /* Полная ширина на десктопе */
+            max-width: 100%;
             margin: 0 auto 40px;
             padding: 0 24px;
+            display: none;
+        }
+
+        .table-container.active {
+            display: block;
         }
 
         .table-wrapper {
@@ -178,7 +487,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 800px; /* Минимальная ширина для скролла */
+            min-width: 800px;
         }
 
         thead {
@@ -240,14 +549,13 @@
             background: var(--surface);
         }
 
-        /* Изображения в таблице */
         .image-cell {
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
         }
 
-        .image-thumb {
+        .table-image-thumb {
             width: 60px;
             height: 60px;
             border-radius: var(--radius-sm);
@@ -257,12 +565,12 @@
             border: 1px solid var(--border-light);
         }
 
-        .image-thumb:hover {
+        .table-image-thumb:hover {
             transform: scale(1.05);
             box-shadow: var(--shadow-md);
         }
 
-        .add-image-btn {
+        .table-add-image-btn {
             width: 60px;
             height: 60px;
             border-radius: var(--radius-sm);
@@ -275,85 +583,41 @@
             background: var(--surface);
         }
 
-        .add-image-btn:hover {
+        .table-add-image-btn:hover {
             border-color: var(--primary-blue);
             background: var(--background);
         }
 
-        /* Чекбоксы */
-        .checkbox-container {
+        .table-checkbox-container {
             display: flex;
             flex-direction: column;
             gap: 8px;
-            max-width: 300px; /* Ограничиваем ширину колонки вопросов */
+            max-width: 300px;
         }
 
-        .checkbox-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            padding: 4px;
-            border-radius: var(--radius-sm);
-            transition: background 0.2s;
-        }
-
-        .checkbox-item:hover {
-            background: var(--surface);
-        }
-
-        .checkbox {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--primary-blue);
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .question-text {
+        .table-question-text {
             font-size: 13px;
             line-height: 1.4;
             color: var(--text-secondary);
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 2; /* Показываем только 2 строки */
+            -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .question-text.expanded {
+        .table-question-text.expanded {
             -webkit-line-clamp: unset;
             color: var(--text-primary);
         }
 
-        .question-text:hover {
+        .table-question-text:hover {
             color: var(--text-primary);
         }
 
-        /* Индикатор длинного текста */
-        .question-text.has-more::after {
-            content: "...";
-            position: absolute;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to right, transparent, var(--background) 50%);
-            padding-left: 20px;
-        }
-
-        /* Компактный режим для мобильных */
-        @media (max-width: 768px) {
-            .checkbox-container {
-                max-width: 200px;
-            }
-            
-            .question-text {
-                font-size: 12px;
-                -webkit-line-clamp: 1; /* На мобильных показываем только 1 строку */
-            }
-        }
-
-        /* Модальное окно */
+        /* Модальные окна */
         .modal {
             display: none;
             position: fixed;
@@ -426,7 +690,6 @@
             background: var(--border-light);
         }
 
-        /* Форма добавления */
         .form-group {
             margin-bottom: 20px;
         }
@@ -460,7 +723,6 @@
             background: var(--background);
         }
 
-        /* Галерея изображений */
         .image-gallery {
             display: flex;
             gap: 8px;
@@ -474,7 +736,6 @@
             border-radius: var(--radius-md);
         }
 
-        /* Пустое состояние */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -487,7 +748,7 @@
             opacity: 0.5;
         }
 
-        /* FAB меню для мобильной версии */
+        /* FAB меню */
         .fab-container {
             position: fixed;
             bottom: 20px;
@@ -574,71 +835,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 12px 16px;
-            }
-
-            h1 {
-                font-size: 24px;
-            }
-
-            .header .btn-group {
-                display: none; /* Скрываем кнопки в шапке на мобильных */
-            }
-
-            .fab-container {
-                display: block; /* Показываем FAB на мобильных */
-            }
-
-            .toolbar {
-                margin: 16px;
-                padding: 12px 16px;
-            }
-
-            .table-container {
-                padding: 0 16px;
-            }
-
-            .table-wrapper {
-                border-radius: var(--radius-md);
-            }
-
-            th, td {
-                padding: 12px 8px;
-                font-size: 14px;
-            }
-
-            .image-thumb, .add-image-btn {
-                width: 50px;
-                height: 50px;
-            }
-
-            .modal-content {
-                max-width: 95%;
-                max-height: 95%;
-                border-radius: var(--radius-md);
-            }
-        }
-
-        /* Анимация загрузки */
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        .loading {
-            animation: pulse 2s infinite;
-        }
-
-        /* Drag and drop */
-        .drag-over {
-            background: var(--surface);
-            border-color: var(--primary-blue);
-        }
-
-        /* Статус бар */
         .status-bar {
             position: fixed;
             bottom: 20px;
@@ -658,7 +854,27 @@
             opacity: 0.9;
         }
 
-        /* Кастомные столбцы */
+        .editable {
+            cursor: text;
+            position: relative;
+        }
+
+        .editable:hover {
+            background: var(--surface);
+            outline: 2px solid var(--primary-blue);
+            outline-offset: -2px;
+            border-radius: var(--radius-sm);
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid var(--primary-blue);
+            border-radius: var(--radius-sm);
+            font-size: inherit;
+            font-family: inherit;
+        }
+
         .column-manager {
             padding: 20px;
         }
@@ -691,68 +907,142 @@
             font-size: 14px;
         }
 
-        /* Инлайн редактирование */
-        .editable {
-            cursor: text;
-            position: relative;
+        /* Адаптивность */
+        @media (max-width: 1200px) {
+            .product-questions {
+                min-width: 300px;
+            }
         }
 
-        .editable:hover {
-            background: var(--surface);
-            outline: 2px solid var(--primary-blue);
-            outline-offset: -2px;
-            border-radius: var(--radius-sm);
+        @media (max-width: 1024px) {
+            .product-content {
+                flex-direction: column;
+            }
+            
+            .product-left {
+                flex-direction: column;
+            }
+
+            .product-questions {
+                min-width: unset;
+                flex: 1;
+            }
         }
 
-        .edit-input {
-            width: 100%;
-            padding: 8px;
-            border: 2px solid var(--primary-blue);
-            border-radius: var(--radius-sm);
-            font-size: inherit;
-            font-family: inherit;
+        @media (max-width: 768px) {
+            .header-content {
+                padding: 12px 16px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .header .btn-group {
+                display: none;
+            }
+
+            .fab-container {
+                display: block;
+            }
+
+            .toolbar {
+                margin: 16px;
+                padding: 12px 16px;
+            }
+
+            .products-grid {
+                padding: 0 16px 80px;
+                gap: 16px;
+            }
+
+            .product-card {
+                border-radius: 8px;
+            }
+
+            .product-header {
+                padding: 12px 16px;
+            }
+
+            .product-name {
+                font-size: 18px;
+            }
+
+            .product-content {
+                padding: 16px;
+                gap: 16px;
+            }
+
+            .main-image-container {
+                width: 100%;
+                height: 250px;
+            }
+
+            .product-images {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .thumbnails-container {
+                flex-direction: row;
+                max-height: none;
+                overflow-x: auto;
+                overflow-y: hidden;
+            }
+
+            .table-container {
+                padding: 0 16px;
+            }
+
+            .table-wrapper {
+                border-radius: var(--radius-md);
+            }
+
+            th, td {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+
+            .table-image-thumb, .table-add-image-btn {
+                width: 50px;
+                height: 50px;
+            }
+
+            .modal-content {
+                max-width: 95%;
+                max-height: 95%;
+                border-radius: var(--radius-md);
+            }
+
+            .table-checkbox-container {
+                max-width: 200px;
+            }
+
+            .table-question-text {
+                font-size: 12px;
+                -webkit-line-clamp: 1;
+            }
+
+            .info-section {
+                margin-bottom: 16px;
+            }
+
+            .info-label {
+                font-size: 11px;
+            }
+
+            .info-value {
+                font-size: 14px;
+            }
         }
 
-        /* Вопросы */
-        .question-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
 
-        .question-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-            padding: 8px;
-            background: var(--surface);
-            border-radius: var(--radius-sm);
-        }
-
-        .question-checkbox {
-            margin-top: 2px;
-        }
-
-        .question-text {
-            flex: 1;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        .add-question-btn {
-            width: 100%;
-            padding: 8px;
-            border: 1px dashed var(--border);
-            background: transparent;
-            border-radius: var(--radius-sm);
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .add-question-btn:hover {
-            border-color: var(--primary-blue);
-            color: var(--primary-blue);
+        .loading {
+            animation: pulse 2s infinite;
         }
     </style>
 </head>
@@ -774,8 +1064,11 @@
                 <button class="btn" onclick="app.importCSV()">
                     ↑ CSV
                 </button>
-                <button class="btn" onclick="app.exportHTML()">
-                    📄 HTML
+                <button class="btn" onclick="app.exportHTML('hybrid')">
+                    📄 HTML (карточки)
+                </button>
+                <button class="btn" onclick="app.exportHTML('table')">
+                    📄 HTML (таблица)
                 </button>
                 <button class="btn" onclick="app.sendToTelegram()">
                     ✈️ Telegram
@@ -796,26 +1089,25 @@
             <div class="search-box">
                 <input type="text" class="search-input" placeholder="Поиск..." oninput="app.search(this.value)">
             </div>
-            <div class="btn-group">
-                <select class="btn" onchange="app.filterByColumn(this.value)">
-                    <option value="">Все столбцы</option>
-                </select>
+            <div class="view-switcher">
+                <button class="view-btn active" onclick="app.switchView('hybrid')">📋 Карточки</button>
+                <button class="view-btn" onclick="app.switchView('table')">📊 Таблица</button>
             </div>
         </div>
     </div>
 
+    <!-- Контейнер для гибридного вида -->
+    <div class="products-grid" id="productsGrid">
+        <!-- Карточки будут добавлены динамически -->
+    </div>
+
     <!-- Таблица -->
-    <div class="table-container">
+    <div class="table-container" id="tableContainer">
         <div class="table-wrapper">
             <table id="productTable">
                 <thead>
                     <tr id="tableHeader">
-                        <th class="sortable" onclick="app.sort('images')">Изображения</th>
-                        <th class="sortable" onclick="app.sort('name')">Наименование</th>
-                        <th class="sortable" onclick="app.sort('article')">Артикул</th>
-                        <th class="sortable" onclick="app.sort('characteristics')">Характеристики</th>
-                        <th>Вопросы</th>
-                        <th>Действия</th>
+                        <!-- Заголовки будут добавлены динамически -->
                     </tr>
                 </thead>
                 <tbody id="tableBody">
@@ -978,13 +1270,19 @@
                 </button>
             </div>
             <div class="fab-item">
-                <span class="fab-label">Экспорт HTML</span>
-                <button class="fab-btn" onclick="app.exportHTML(); app.toggleFab();">
+                <span class="fab-label">HTML карточки</span>
+                <button class="fab-btn" onclick="app.exportHTML('hybrid'); app.toggleFab();">
+                    <span>📋</span>
+                </button>
+            </div>
+            <div class="fab-item">
+                <span class="fab-label">HTML таблица</span>
+                <button class="fab-btn" onclick="app.exportHTML('table'); app.toggleFab();">
                     <span>📄</span>
                 </button>
             </div>
             <div class="fab-item">
-                <span class="fab-label">Отправить в Telegram</span>
+                <span class="fab-label">Telegram</span>
                 <button class="fab-btn" onclick="app.sendToTelegram(); app.toggleFab();">
                     <span>✈️</span>
                 </button>
@@ -1012,7 +1310,6 @@
     <input type="file" id="backupImport" accept=".json" style="display: none" onchange="app.handleBackupImport(event)">
 
     <script>
-        // Главный объект приложения
         const app = {
             db: null,
             products: [],
@@ -1021,8 +1318,8 @@
             sortColumn: null,
             sortDirection: 'asc',
             searchQuery: '',
+            currentView: 'hybrid',
 
-            // Инициализация
             async init() {
                 await this.initDB();
                 await this.loadCustomColumns();
@@ -1031,7 +1328,6 @@
                 this.registerServiceWorker();
             },
 
-            // Инициализация IndexedDB
             async initDB() {
                 return new Promise((resolve, reject) => {
                     const request = indexedDB.open('ProductDB', 1);
@@ -1056,7 +1352,6 @@
                 });
             },
 
-            // Загрузка продуктов
             async loadProducts() {
                 return new Promise((resolve, reject) => {
                     const transaction = this.db.transaction(['products'], 'readonly');
@@ -1071,7 +1366,6 @@
                 });
             },
 
-            // Загрузка кастомных столбцов
             async loadCustomColumns() {
                 return new Promise((resolve, reject) => {
                     const transaction = this.db.transaction(['columns'], 'readonly');
@@ -1087,7 +1381,6 @@
                 });
             },
 
-            // Сохранение продукта
             async saveProduct(product) {
                 return new Promise((resolve, reject) => {
                     const transaction = this.db.transaction(['products'], 'readwrite');
@@ -1099,7 +1392,6 @@
                 });
             },
 
-            // Удаление продукта
             async deleteProduct(id) {
                 if (!confirm('Удалить изделие?')) return;
                 
@@ -1112,69 +1404,380 @@
                 this.showStatus('Изделие удалено');
             },
 
-            // Показать модальное окно добавления
-            showAddModal(productId = null) {
-                this.currentEditId = productId;
-                const modal = document.getElementById('addModal');
-                const form = document.getElementById('productForm');
+            switchView(view) {
+                this.currentView = view;
                 
-                if (productId) {
-                    const product = this.products.find(p => p.id === productId);
-                    document.getElementById('modalTitle').textContent = 'Редактировать изделие';
-                    document.getElementById('productName').value = product.name;
-                    document.getElementById('productArticle').value = product.article;
-                    document.getElementById('productCharacteristics').value = product.characteristics;
-                    
-                    // Загрузка вопросов в текстовое поле
-                    if (product.questions) {
-                        const questionsText = Object.keys(product.questions).join('\n');
-                        document.getElementById('productQuestions').value = questionsText;
-                    } else {
-                        document.getElementById('productQuestions').value = '';
-                    }
-                    
-                    // Загрузка кастомных полей
-                    this.renderCustomFields(product.customFields || {});
-                    
-                    // Загрузка превью изображений
-                    if (product.images && product.images.length > 0) {
-                        const preview = document.getElementById('imagePreview');
-                        preview.innerHTML = product.images.map(img => 
-                            `<img src="${img}" class="image-thumb">`
-                        ).join('');
-                    }
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+                
+                if (view === 'hybrid') {
+                    document.getElementById('productsGrid').style.display = 'flex';
+                    document.getElementById('tableContainer').classList.remove('active');
                 } else {
-                    document.getElementById('modalTitle').textContent = 'Добавить изделие';
-                    form.reset();
-                    document.getElementById('productQuestions').value = '';
-                    document.getElementById('imagePreview').innerHTML = '';
+                    document.getElementById('productsGrid').style.display = 'none';
+                    document.getElementById('tableContainer').classList.add('active');
                 }
                 
-                modal.classList.add('active');
+                this.render();
             },
 
-            // Закрыть модальное окно
-            closeModal(modalId) {
-                document.getElementById(modalId).classList.remove('active');
-            },
-
-            // Предпросмотр изображений
-            async previewImages(event) {
-                const files = event.target.files;
-                const preview = document.getElementById('imagePreview');
-                preview.innerHTML = '';
-                
-                for (let file of files) {
-                    const optimized = await this.optimizeImage(file);
-                    const url = URL.createObjectURL(optimized);
-                    const img = document.createElement('img');
-                    img.src = url;
-                    img.className = 'image-thumb';
-                    preview.appendChild(img);
+            render() {
+                if (this.currentView === 'hybrid') {
+                    this.renderHybridView();
+                } else {
+                    this.renderTableView();
                 }
             },
 
-            // Оптимизация изображения
+            renderHybridView() {
+                const container = document.getElementById('productsGrid');
+                container.innerHTML = '';
+                
+                let products = this.getFilteredProducts();
+                
+                if (products.length === 0) {
+                    container.innerHTML = '<div class="empty-state"><div class="empty-icon">📦</div><h3>Нет изделий</h3><p>Добавьте первое изделие для начала работы</p></div>';
+                    return;
+                }
+                
+                products.forEach(product => {
+                    const card = this.createProductCard(product);
+                    container.appendChild(card);
+                });
+            },
+
+            createProductCard(product) {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                
+                const totalQuestions = product.questions ? Object.keys(product.questions).length : 0;
+                const answeredQuestions = product.questions ? 
+                    Object.values(product.questions).filter(q => q).length : 0;
+                
+                const statsClass = answeredQuestions === totalQuestions && totalQuestions > 0 ? 'complete' : 
+                                  answeredQuestions > 0 ? 'partial' : '';
+                
+                card.innerHTML = `
+                    <div class="product-header">
+                        <div class="product-title">
+                            <div class="product-name">${product.name || 'Без названия'}</div>
+                            <div class="product-article">Артикул: ${product.article || '—'}</div>
+                        </div>
+                        <div class="product-actions">
+                            <button class="btn" onclick="app.showAddModal('${product.id}')">✏️</button>
+                            <button class="btn" onclick="app.deleteProduct('${product.id}')">🗑</button>
+                        </div>
+                    </div>
+                    <div class="product-content">
+                        <div class="product-left">
+                            <div class="product-images" id="images-${product.id}">
+                                ${this.renderProductImages(product)}
+                            </div>
+                            <div class="product-info">
+                                ${product.characteristics ? `
+                                    <div class="info-section">
+                                        <div class="info-label">Характеристики</div>
+                                        <div class="info-value">${product.characteristics}</div>
+                                    </div>
+                                ` : ''}
+                                ${this.renderCustomFields(product)}
+                            </div>
+                        </div>
+                        <div class="product-questions">
+                            <div class="questions-header">
+                                <span class="questions-title">Вопросы по изделию</span>
+                                <span class="questions-stats ${statsClass}">
+                                    ✓ ${answeredQuestions} из ${totalQuestions}
+                                </span>
+                            </div>
+                            <div class="checkbox-container">
+                                ${this.renderProductQuestions(product)}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                return card;
+            },
+
+            renderProductImages(product) {
+                let html = '';
+                
+                if (product.images && product.images.length > 0) {
+                    html += `
+                        <div class="main-image-container">
+                            <img src="${product.images[0]}" class="main-image" 
+                                 onclick="app.showGallery('${product.id}', 0)">
+                            <button class="delete-image-btn" 
+                                    onclick="app.deleteProductImage('${product.id}', 0)">✕</button>
+                        </div>
+                        <div class="thumbnails-container">
+                    `;
+                    
+                    for (let i = 1; i < product.images.length; i++) {
+                        html += `
+                            <div class="thumbnail-wrapper">
+                                <img src="${product.images[i]}" class="image-thumb"
+                                     onclick="app.switchMainImage('${product.id}', ${i})">
+                                <button class="delete-image-btn"
+                                        onclick="app.deleteProductImage('${product.id}', ${i})">✕</button>
+                            </div>
+                        `;
+                    }
+                    
+                    html += `
+                            <div class="add-image-btn" onclick="app.addImageToProduct('${product.id}')">+</div>
+                        </div>
+                    `;
+                } else {
+                    html = `
+                        <div class="main-image-container" style="display: flex; align-items: center; justify-content: center;">
+                            <div class="add-image-btn" style="width: 100%; height: 100%; font-size: 48px;"
+                                 onclick="app.addImageToProduct('${product.id}')">+</div>
+                        </div>
+                    `;
+                }
+                
+                return html;
+            },
+
+            renderCustomFields(product) {
+                let html = '';
+                
+                this.customColumns.forEach(column => {
+                    const value = product.customFields?.[column.id] || '';
+                    if (value) {
+                        html += `
+                            <div class="info-section">
+                                <div class="info-label">${column.name}</div>
+                                <div class="info-value">`;
+                        
+                        if (column.type === 'link') {
+                            html += `<a href="${value}" target="_blank">${value}</a>`;
+                        } else if (column.type === 'image') {
+                            html += `<img src="${value}" style="max-width: 100%; border-radius: 8px;">`;
+                        } else {
+                            html += value;
+                        }
+                        
+                        html += `</div></div>`;
+                    }
+                });
+                
+                return html;
+            },
+
+            renderProductQuestions(product) {
+                let html = '';
+                
+                if (product.questions && Object.keys(product.questions).length > 0) {
+                    Object.entries(product.questions).forEach(([question, checked], index) => {
+                        const questionId = `q_${product.id}_${index}`;
+                        html += `
+                            <div class="checkbox-item">
+                                <input type="checkbox" class="checkbox" id="${questionId}"
+                                       ${checked ? 'checked' : ''}
+                                       onchange="app.toggleQuestion('${product.id}', '${this.escapeHtml(question)}', this.checked)">
+                                <label for="${questionId}" class="question-text" id="${questionId}_text"
+                                       onclick="app.toggleQuestionExpand('${questionId}_text')">${question}</label>
+                            </div>
+                        `;
+                    });
+                } else {
+                    html = '<p style="color: #999; text-align: center; padding: 20px;">Нет вопросов</p>';
+                }
+                
+                return html;
+            },
+
+            renderTableView() {
+                const tbody = document.getElementById('tableBody');
+                const emptyState = document.getElementById('emptyState');
+                
+                let products = this.getFilteredProducts();
+                
+                if (products.length === 0) {
+                    tbody.innerHTML = '';
+                    emptyState.style.display = 'block';
+                    return;
+                }
+                
+                emptyState.style.display = 'none';
+                tbody.innerHTML = products.map(product => this.renderTableRow(product)).join('');
+            },
+
+            renderTableRow(product) {
+                let imagesHtml = '<td><div class="image-cell">';
+                if (product.images && product.images.length > 0) {
+                    product.images.forEach((img, index) => {
+                        imagesHtml += `<img src="${img}" class="table-image-thumb" onclick="app.showGallery('${product.id}', ${index})">`;
+                    });
+                }
+                imagesHtml += `<div class="table-add-image-btn" onclick="app.addImageToProduct('${product.id}')">+</div></div></td>`;
+                
+                let questionsHtml = '<div class="table-checkbox-container">';
+                if (product.questions) {
+                    let questionIndex = 0;
+                    for (let [question, checked] of Object.entries(product.questions)) {
+                        const questionId = `tq_${product.id}_${questionIndex}`;
+                        questionsHtml += `
+                            <div class="checkbox-item">
+                                <input type="checkbox" class="checkbox" ${checked ? 'checked' : ''} 
+                                       onchange="app.toggleQuestion('${product.id}', '${this.escapeHtml(question)}', this.checked)">
+                                <span class="table-question-text" id="${questionId}" 
+                                      onclick="app.toggleQuestionExpand('${questionId}')" 
+                                      title="${this.escapeHtml(question)}">${question}</span>
+                            </div>
+                        `;
+                        questionIndex++;
+                    }
+                }
+                questionsHtml += '</div>';
+                
+                let customColumnsHtml = '';
+                this.customColumns.forEach(column => {
+                    const value = product.customFields?.[column.id] || '';
+                    if (column.type === 'link' && value) {
+                        customColumnsHtml += `<td><a href="${value}" target="_blank">${value}</a></td>`;
+                    } else if (column.type === 'image' && value) {
+                        customColumnsHtml += `<td><img src="${value}" class="table-image-thumb"></td>`;
+                    } else {
+                        customColumnsHtml += `<td class="editable" onclick="app.editCell('${product.id}', 'custom_${column.id}', this)">${value}</td>`;
+                    }
+                });
+                
+                return `
+                    <tr>
+                        ${imagesHtml}
+                        <td class="editable" onclick="app.editCell('${product.id}', 'name', this)">${product.name}</td>
+                        <td class="editable" onclick="app.editCell('${product.id}', 'article', this)">${product.article}</td>
+                        <td class="editable" onclick="app.editCell('${product.id}', 'characteristics', this)">${product.characteristics || ''}</td>
+                        ${customColumnsHtml}
+                        <td>${questionsHtml}</td>
+                        <td>
+                            <div class="btn-group">
+                                <button class="btn" onclick="app.showAddModal('${product.id}')">✏️</button>
+                                <button class="btn" onclick="app.deleteProduct('${product.id}')">🗑</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            },
+
+            getFilteredProducts() {
+                let products = [...this.products];
+                
+                if (this.searchQuery) {
+                    products = products.filter(p => 
+                        p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                        p.article.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                        (p.characteristics && p.characteristics.toLowerCase().includes(this.searchQuery.toLowerCase()))
+                    );
+                }
+                
+                if (this.sortColumn) {
+                    products.sort((a, b) => {
+                        let aVal = a[this.sortColumn] || '';
+                        let bVal = b[this.sortColumn] || '';
+                        
+                        if (this.sortColumn.startsWith('custom_')) {
+                            const columnId = this.sortColumn.replace('custom_', '');
+                            aVal = a.customFields?.[columnId] || '';
+                            bVal = b.customFields?.[columnId] || '';
+                        }
+                        
+                        if (aVal < bVal) return this.sortDirection === 'asc' ? -1 : 1;
+                        if (aVal > bVal) return this.sortDirection === 'asc' ? 1 : -1;
+                        return 0;
+                    });
+                }
+                
+                return products;
+            },
+
+            updateTableHeaders() {
+                const header = document.getElementById('tableHeader');
+                const baseColumns = `
+                    <th class="sortable" onclick="app.sort('images')">Изображения</th>
+                    <th class="sortable" onclick="app.sort('name')">Наименование</th>
+                    <th class="sortable" onclick="app.sort('article')">Артикул</th>
+                    <th class="sortable" onclick="app.sort('characteristics')">Характеристики</th>
+                `;
+                
+                let customColumnsHtml = '';
+                this.customColumns.forEach(column => {
+                    customColumnsHtml += `<th class="sortable" onclick="app.sort('custom_${column.id}')">${column.name}</th>`;
+                });
+                
+                header.innerHTML = baseColumns + customColumnsHtml + `
+                    <th>Вопросы</th>
+                    <th>Действия</th>
+                `;
+            },
+
+            deleteProductImage(productId, imageIndex) {
+                if (!confirm('Удалить это изображение?')) return;
+                
+                const product = this.products.find(p => p.id === productId);
+                if (product && product.images) {
+                    product.images.splice(imageIndex, 1);
+                    this.saveProduct(product);
+                    this.render();
+                }
+            },
+
+            switchMainImage(productId, imageIndex) {
+                const product = this.products.find(p => p.id === productId);
+                if (product && product.images && product.images[imageIndex]) {
+                    [product.images[0], product.images[imageIndex]] = 
+                    [product.images[imageIndex], product.images[0]];
+                    
+                    this.saveProduct(product);
+                    this.render();
+                }
+            },
+
+            toggleQuestionExpand(questionId) {
+                const element = document.getElementById(questionId);
+                if (element) {
+                    element.classList.toggle('expanded');
+                }
+            },
+
+            escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            },
+
+            addImageToProduct(productId) {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/*';
+                input.multiple = true;
+                input.onchange = async (e) => {
+                    const files = e.target.files;
+                    if (!files.length) return;
+                    
+                    const product = this.products.find(p => p.id === productId);
+                    if (!product.images) product.images = [];
+                    
+                    for (let file of files) {
+                        const optimized = await this.optimizeImage(file);
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            product.images.push(e.target.result);
+                            this.saveProduct(product);
+                            this.render();
+                        };
+                        reader.readAsDataURL(optimized);
+                    }
+                };
+                input.click();
+            },
+
             async optimizeImage(file) {
                 return new Promise((resolve) => {
                     const reader = new FileReader();
@@ -1184,7 +1787,6 @@
                             const canvas = document.createElement('canvas');
                             const ctx = canvas.getContext('2d');
                             
-                            // Максимальный размер
                             const maxSize = 1920;
                             let width = img.width;
                             let height = img.height;
@@ -1211,8 +1813,45 @@
                 });
             },
 
-            // Рендер кастомных полей
-            renderCustomFields(fields) {
+            showAddModal(productId = null) {
+                this.currentEditId = productId;
+                const modal = document.getElementById('addModal');
+                const form = document.getElementById('productForm');
+                
+                if (productId) {
+                    const product = this.products.find(p => p.id === productId);
+                    document.getElementById('modalTitle').textContent = 'Редактировать изделие';
+                    document.getElementById('productName').value = product.name;
+                    document.getElementById('productArticle').value = product.article;
+                    document.getElementById('productCharacteristics').value = product.characteristics || '';
+                    
+                    if (product.questions) {
+                        const questionsText = Object.keys(product.questions).join('\n');
+                        document.getElementById('productQuestions').value = questionsText;
+                    } else {
+                        document.getElementById('productQuestions').value = '';
+                    }
+                    
+                    this.renderFormCustomFields(product.customFields || {});
+                    
+                    if (product.images && product.images.length > 0) {
+                        const preview = document.getElementById('imagePreview');
+                        preview.innerHTML = product.images.map(img => 
+                            `<img src="${img}" class="image-thumb">`
+                        ).join('');
+                    }
+                } else {
+                    document.getElementById('modalTitle').textContent = 'Добавить изделие';
+                    form.reset();
+                    document.getElementById('productQuestions').value = '';
+                    document.getElementById('imagePreview').innerHTML = '';
+                    this.renderFormCustomFields({});
+                }
+                
+                modal.classList.add('active');
+            },
+
+            renderFormCustomFields(fields) {
                 const container = document.getElementById('customFieldsContainer');
                 container.innerHTML = '';
                 
@@ -1257,166 +1896,42 @@
                 });
             },
 
-            // Обновление заголовков таблицы
-            updateTableHeaders() {
-                const header = document.getElementById('tableHeader');
-                const baseColumns = `
-                    <th class="sortable" onclick="app.sort('images')">Изображения</th>
-                    <th class="sortable" onclick="app.sort('name')">Наименование</th>
-                    <th class="sortable" onclick="app.sort('article')">Артикул</th>
-                    <th class="sortable" onclick="app.sort('characteristics')">Характеристики</th>
-                `;
-                
-                let customColumnsHtml = '';
-                this.customColumns.forEach(column => {
-                    customColumnsHtml += `<th class="sortable" onclick="app.sort('custom_${column.id}')">${column.name}</th>`;
-                });
-                
-                header.innerHTML = baseColumns + customColumnsHtml + `
-                    <th>Вопросы</th>
-                    <th>Действия</th>
-                `;
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.remove('active');
             },
 
-            // Рендер таблицы
-            render() {
-                const tbody = document.getElementById('tableBody');
-                const emptyState = document.getElementById('emptyState');
+            async previewImages(event) {
+                const files = event.target.files;
+                const preview = document.getElementById('imagePreview');
+                preview.innerHTML = '';
                 
-                if (this.products.length === 0) {
-                    tbody.innerHTML = '';
-                    emptyState.style.display = 'block';
-                    return;
+                for (let file of files) {
+                    const optimized = await this.optimizeImage(file);
+                    const url = URL.createObjectURL(optimized);
+                    const img = document.createElement('img');
+                    img.src = url;
+                    img.className = 'image-thumb';
+                    preview.appendChild(img);
                 }
-                
-                emptyState.style.display = 'none';
-                
-                let filteredProducts = this.products;
-                
-                // Поиск
-                if (this.searchQuery) {
-                    filteredProducts = filteredProducts.filter(p => 
-                        p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                        p.article.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                        p.characteristics.toLowerCase().includes(this.searchQuery.toLowerCase())
-                    );
-                }
-                
-                // Сортировка
-                if (this.sortColumn) {
-                    filteredProducts.sort((a, b) => {
-                        let aVal = a[this.sortColumn];
-                        let bVal = b[this.sortColumn];
-                        
-                        if (this.sortColumn.startsWith('custom_')) {
-                            const columnId = this.sortColumn.replace('custom_', '');
-                            aVal = a.customFields?.[columnId] || '';
-                            bVal = b.customFields?.[columnId] || '';
-                        }
-                        
-                        if (aVal < bVal) return this.sortDirection === 'asc' ? -1 : 1;
-                        if (aVal > bVal) return this.sortDirection === 'asc' ? 1 : -1;
-                        return 0;
-                    });
-                }
-                
-                tbody.innerHTML = filteredProducts.map(product => this.renderRow(product)).join('');
             },
 
-            // Рендер строки таблицы
-            renderRow(product) {
-                // Изображения
-                let imagesHtml = '<td><div class="image-cell">';
-                if (product.images && product.images.length > 0) {
-                    product.images.forEach((img, index) => {
-                        imagesHtml += `<img src="${img}" class="image-thumb" onclick="app.showGallery('${product.id}', ${index})">`;
-                    });
-                }
-                imagesHtml += `<div class="add-image-btn" onclick="app.addImageToProduct('${product.id}')">+</div></div></td>`;
+            showGallery(productId, startIndex = 0) {
+                const product = this.products.find(p => p.id === productId);
+                if (!product.images || product.images.length === 0) return;
                 
-                // Вопросы
-                let questionsHtml = '<div class="checkbox-container">';
-                if (product.questions) {
-                    let questionIndex = 0;
-                    for (let [question, checked] of Object.entries(product.questions)) {
-                        const questionId = `${product.id}_q_${questionIndex}`;
-                        questionsHtml += `
-                            <div class="checkbox-item">
-                                <input type="checkbox" class="checkbox" ${checked ? 'checked' : ''} 
-                                       onchange="app.toggleQuestion('${product.id}', '${question.replace(/'/g, "\\'")}', this.checked)">
-                                <span class="question-text" id="${questionId}" 
-                                      onclick="app.toggleQuestionExpand('${questionId}')" 
-                                      title="${question.replace(/"/g, '&quot;')}">${question}</span>
-                            </div>
-                        `;
-                        questionIndex++;
-                    }
-                }
-                questionsHtml += '</div>';
+                const gallery = document.getElementById('galleryView');
+                gallery.innerHTML = product.images.map(img => 
+                    `<img src="${img}" class="gallery-image">`
+                ).join('');
                 
-                let customColumnsHtml = '';
-                this.customColumns.forEach(column => {
-                    const value = product.customFields?.[column.id] || '';
-                    if (column.type === 'link' && value) {
-                        customColumnsHtml += `<td><a href="${value}" target="_blank">${value}</a></td>`;
-                    } else if (column.type === 'image' && value) {
-                        customColumnsHtml += `<td><img src="${value}" class="image-thumb"></td>`;
-                    } else {
-                        customColumnsHtml += `<td class="editable" onclick="app.editCell('${product.id}', 'custom_${column.id}', this)">${value}</td>`;
-                    }
-                });
-                
-                return `
-                    <tr>
-                        ${imagesHtml}
-                        <td class="editable" onclick="app.editCell('${product.id}', 'name', this)">${product.name}</td>
-                        <td class="editable" onclick="app.editCell('${product.id}', 'article', this)">${product.article}</td>
-                        <td class="editable" onclick="app.editCell('${product.id}', 'characteristics', this)">${product.characteristics}</td>
-                        ${customColumnsHtml}
-                        <td>${questionsHtml}</td>
-                        <td>
-                            <div class="btn-group">
-                                <button class="btn" onclick="app.showAddModal('${product.id}')">✏️</button>
-                                <button class="btn" onclick="app.deleteProduct('${product.id}')">🗑</button>
-                            </div>
-                        </td>
-                    </tr>
-                `;
-            },
-            
-            // Добавление изображения к существующему продукту
-            addImageToProduct(productId) {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.multiple = true;
-                input.onchange = async (e) => {
-                    const files = e.target.files;
-                    if (!files.length) return;
-                    
-                    const product = this.products.find(p => p.id === productId);
-                    if (!product.images) product.images = [];
-                    
-                    for (let file of files) {
-                        const optimized = await this.optimizeImage(file);
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            product.images.push(e.target.result);
-                            this.saveProduct(product);
-                            this.render();
-                        };
-                        reader.readAsDataURL(optimized);
-                    }
-                };
-                input.click();
+                document.getElementById('imageModal').classList.add('active');
             },
 
-            // Инлайн редактирование
             editCell(productId, field, cell) {
                 const product = this.products.find(p => p.id === productId);
                 const currentValue = field.startsWith('custom_') 
                     ? product.customFields?.[field.replace('custom_', '')] || ''
-                    : product[field];
+                    : product[field] || '';
                 
                 const input = document.createElement('input');
                 input.className = 'edit-input';
@@ -1435,7 +1950,6 @@
                 input.select();
             },
 
-            // Сохранение ячейки
             async saveCell(productId, field, value, cell) {
                 const product = this.products.find(p => p.id === productId);
                 
@@ -1451,28 +1965,31 @@
                 this.showStatus('Сохранено');
             },
 
-            // Переключение вопроса
             async toggleQuestion(productId, question, checked) {
                 const product = this.products.find(p => p.id === productId);
                 if (!product.questions) product.questions = {};
                 product.questions[question] = checked;
                 await this.saveProduct(product);
+                
+                if (this.currentView === 'hybrid') {
+                    const card = document.querySelector(`.product-card:has([onclick*="${productId}"])`);
+                    if (card) {
+                        const totalQuestions = Object.keys(product.questions).length;
+                        const answeredQuestions = Object.values(product.questions).filter(q => q).length;
+                        const statsElement = card.querySelector('.questions-stats');
+                        if (statsElement) {
+                            statsElement.textContent = `✓ ${answeredQuestions} из ${totalQuestions}`;
+                            statsElement.className = 'questions-stats';
+                            if (answeredQuestions === totalQuestions && totalQuestions > 0) {
+                                statsElement.classList.add('complete');
+                            } else if (answeredQuestions > 0) {
+                                statsElement.classList.add('partial');
+                            }
+                        }
+                    }
+                }
             },
 
-            // Показать галерею
-            showGallery(productId, startIndex = 0) {
-                const product = this.products.find(p => p.id === productId);
-                if (!product.images || product.images.length === 0) return;
-                
-                const gallery = document.getElementById('galleryView');
-                gallery.innerHTML = product.images.map((img, index) => 
-                    `<img src="${img}" class="gallery-image">`
-                ).join('');
-                
-                document.getElementById('imageModal').classList.add('active');
-            },
-
-            // Сортировка
             sort(column) {
                 if (this.sortColumn === column) {
                     this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -1481,7 +1998,6 @@
                     this.sortDirection = 'asc';
                 }
                 
-                // Обновление классов заголовков
                 document.querySelectorAll('th').forEach(th => {
                     th.classList.remove('sort-asc', 'sort-desc');
                 });
@@ -1496,13 +2012,11 @@
                 this.render();
             },
 
-            // Поиск
             search(query) {
                 this.searchQuery = query;
                 this.render();
             },
 
-            // Управление столбцами
             showColumnManager() {
                 const list = document.getElementById('columnList');
                 list.innerHTML = this.customColumns.map(column => `
@@ -1522,7 +2036,6 @@
                 document.getElementById('columnModal').classList.add('active');
             },
 
-            // Добавить столбец
             async addColumn() {
                 const column = {
                     id: Date.now().toString(),
@@ -1541,7 +2054,6 @@
                 this.showColumnManager();
             },
 
-            // Обновить столбец
             async updateColumn(columnId, field, value) {
                 const column = this.customColumns.find(c => c.id === columnId);
                 column[field] = value;
@@ -1554,7 +2066,6 @@
                 this.render();
             },
 
-            // Удалить столбец
             async removeColumn(columnId) {
                 if (!confirm('Удалить столбец? Все данные в этом столбце будут потеряны.')) return;
                 
@@ -1564,7 +2075,6 @@
                 const objectStore = transaction.objectStore('columns');
                 objectStore.delete(columnId);
                 
-                // Удаление данных из продуктов
                 this.products.forEach(product => {
                     if (product.customFields && product.customFields[columnId]) {
                         delete product.customFields[columnId];
@@ -1577,31 +2087,26 @@
                 this.showColumnManager();
             },
 
-            // Экспорт в CSV
             exportCSV() {
-                let csv = '\uFEFF'; // BOM для корректного отображения кириллицы в Excel
+                let csv = '\uFEFF';
                 csv += 'Наименование,Артикул,Характеристики';
                 
-                // Добавляем кастомные столбцы
                 this.customColumns.forEach(col => {
                     csv += `,${col.name}`;
                 });
                 csv += ',Вопросы\n';
                 
                 this.products.forEach(product => {
-                    // Основные поля
                     let row = [
                         product.name || '',
                         product.article || '',
                         product.characteristics || ''
                     ];
                     
-                    // Кастомные поля
                     this.customColumns.forEach(col => {
                         row.push(product.customFields?.[col.id] || '');
                     });
                     
-                    // Вопросы - объединяем в одну ячейку
                     const questions = [];
                     if (product.questions) {
                         for (let [q, checked] of Object.entries(product.questions)) {
@@ -1610,7 +2115,6 @@
                     }
                     row.push(questions.join('; '));
                     
-                    // Экранируем значения с запятыми и кавычками
                     csv += row.map(field => {
                         const str = String(field);
                         if (str.includes(',') || str.includes('"') || str.includes('\n')) {
@@ -1629,12 +2133,10 @@
                 this.showStatus('CSV экспортирован');
             },
 
-            // Импорт CSV
             importCSV() {
                 document.getElementById('csvImport').click();
             },
 
-            // Обработка импорта CSV
             handleCSVImport(event) {
                 const file = event.target.files[0];
                 if (!file) return;
@@ -1642,177 +2144,11 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const csv = e.target.result;
-                    // Здесь нужно добавить парсинг CSV и импорт данных
                     this.showStatus('CSV импортирован');
                 };
                 reader.readAsText(file);
             },
 
-            // Экспорт в HTML
-            exportHTML() {
-                let html = `
-                <!DOCTYPE html>
-                <html lang="ru">
-                <head>
-                    <meta charset="UTF-8">
-                    <title>Изделия проекта - ${new Date().toLocaleDateString()}</title>
-                    <style>
-                        body { 
-                            font-family: -apple-system, sans-serif; 
-                            padding: 20px;
-                            background: #f5f5f5;
-                        }
-                        .header {
-                            background: white;
-                            padding: 20px;
-                            border-radius: 12px;
-                            margin-bottom: 20px;
-                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                        }
-                        h1 { 
-                            color: #333;
-                            margin: 0 0 10px 0;
-                        }
-                        .date {
-                            color: #666;
-                            font-size: 14px;
-                        }
-                        table { 
-                            width: 100%; 
-                            border-collapse: collapse;
-                            background: white;
-                            border-radius: 12px;
-                            overflow: hidden;
-                            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-                        }
-                        th, td { 
-                            padding: 12px; 
-                            text-align: left;
-                            border-bottom: 1px solid #e0e0e0;
-                        }
-                        th { 
-                            background: #f8f9fa; 
-                            font-weight: 600;
-                            color: #666;
-                            text-transform: uppercase;
-                            font-size: 12px;
-                            letter-spacing: 0.5px;
-                        }
-                        tr:hover {
-                            background: #f8f9fa;
-                        }
-                        .checked { 
-                            color: green; 
-                            font-weight: 500;
-                        }
-                        .unchecked { 
-                            color: #999; 
-                        }
-                        .question-item {
-                            margin: 4px 0;
-                        }
-                        .images {
-                            display: flex;
-                            gap: 8px;
-                            flex-wrap: wrap;
-                        }
-                        .images img { 
-                            width: 80px;
-                            height: 80px;
-                            object-fit: cover;
-                            border-radius: 8px;
-                            border: 1px solid #e0e0e0;
-                        }
-                        @media print {
-                            body { background: white; }
-                            .header { box-shadow: none; border: 1px solid #e0e0e0; }
-                            table { box-shadow: none; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>Изделия проекта</h1>
-                        <div class="date">Дата экспорта: ${new Date().toLocaleString()}</div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Изображения</th>
-                                <th>Наименование</th>
-                                <th>Артикул</th>
-                                <th>Характеристики</th>
-                `;
-                
-                this.customColumns.forEach(col => {
-                    html += `<th>${col.name}</th>`;
-                });
-                
-                html += `<th>Вопросы</th></tr></thead><tbody>`;
-                
-                this.products.forEach(product => {
-                    html += '<tr>';
-                    
-                    // Изображения
-                    html += '<td><div class="images">';
-                    if (product.images && product.images.length > 0) {
-                        product.images.forEach(img => {
-                            html += `<img src="${img}" alt="Изображение">`;
-                        });
-                    } else {
-                        html += '<span style="color: #999;">—</span>';
-                    }
-                    html += '</div></td>';
-                    
-                    html += `
-                        <td>${product.name || ''}</td>
-                        <td>${product.article || ''}</td>
-                        <td>${product.characteristics || ''}</td>
-                    `;
-                    
-                    // Кастомные столбцы
-                    this.customColumns.forEach(col => {
-                        const value = product.customFields?.[col.id] || '';
-                        if (col.type === 'link' && value) {
-                            html += `<td><a href="${value}" target="_blank">${value}</a></td>`;
-                        } else if (col.type === 'image' && value) {
-                            html += `<td><img src="${value}" style="max-width: 100px; height: auto;"></td>`;
-                        } else {
-                            html += `<td>${value}</td>`;
-                        }
-                    });
-                    
-                    // Вопросы
-                    html += '<td>';
-                    if (product.questions) {
-                        for (let [question, checked] of Object.entries(product.questions)) {
-                            html += `<div class="question-item ${checked ? 'checked' : 'unchecked'}">
-                                ${checked ? '✓' : '✗'} ${question}
-                            </div>`;
-                        }
-                    }
-                    html += '</td></tr>';
-                });
-                
-                html += `
-                        </tbody>
-                    </table>
-                    <div style="margin-top: 40px; padding: 20px; background: white; border-radius: 12px; text-align: center; color: #666;">
-                        <small>Сгенерировано системой управления изделиями</small>
-                    </div>
-                </body>
-                </html>`;
-                
-                const blob = new Blob([html], { type: 'text/html;charset=utf-8;' });
-                const link = document.createElement('a');
-                link.href = URL.createObjectURL(blob);
-                link.download = `products_${new Date().toISOString().split('T')[0]}.html`;
-                link.click();
-                
-                this.showStatus('HTML документ создан');
-            },
-
-            // Резервное копирование
             async backup() {
                 const backup = {
                     version: 1,
@@ -1830,12 +2166,10 @@
                 this.showStatus('Резервная копия создана');
             },
 
-            // Восстановление
             restore() {
                 document.getElementById('backupImport').click();
             },
 
-            // Обработка восстановления
             async handleBackupImport(event) {
                 const file = event.target.files[0];
                 if (!file) return;
@@ -1845,19 +2179,15 @@
                     try {
                         const backup = JSON.parse(e.target.result);
                         
-                        // Восстановление продуктов
                         const productTransaction = this.db.transaction(['products'], 'readwrite');
                         const productStore = productTransaction.objectStore('products');
                         
-                        // Очистка существующих данных
                         await productStore.clear();
                         
-                        // Добавление новых данных
                         for (let product of backup.products) {
                             await productStore.add(product);
                         }
                         
-                        // Восстановление столбцов
                         const columnTransaction = this.db.transaction(['columns'], 'readwrite');
                         const columnStore = columnTransaction.objectStore('columns');
                         
@@ -1867,7 +2197,6 @@
                             await columnStore.add(column);
                         }
                         
-                        // Перезагрузка данных
                         await this.loadCustomColumns();
                         await this.loadProducts();
                         this.render();
@@ -1880,99 +2209,366 @@
                 reader.readAsText(file);
             },
 
-            // Показать статус
-            showStatus(message) {
-                const statusBar = document.getElementById('statusBar');
-                statusBar.textContent = message;
-                statusBar.classList.add('show');
-                setTimeout(() => statusBar.classList.remove('show'), 3000);
-            },
-            
-            // Переключение FAB меню
-            toggleFab() {
-                const fabMain = document.getElementById('fabMain');
-                const fabMenu = document.getElementById('fabMenu');
-                fabMain.classList.toggle('active');
-                fabMenu.classList.toggle('active');
-            },
-            
-            // Развернуть/свернуть вопрос
-            toggleQuestionExpand(questionId) {
-                const element = document.getElementById(questionId);
-                if (element) {
-                    element.classList.toggle('expanded');
-                }
-            },
-            
-            // Проверка обновлений Service Worker
-            async checkForUpdates() {
-                if ('serviceWorker' in navigator) {
-                    const registration = await navigator.serviceWorker.getRegistration();
-                    if (registration) {
-                        registration.update();
-                        
-                        // Слушаем обновления
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'activated') {
-                                    // Показываем уведомление об обновлении
-                                    if (confirm('Доступна новая версия приложения. Обновить сейчас?')) {
-                                        window.location.reload(true);
-                                    }
-                                }
-                            });
-                        });
-                    }
-                }
-            },
+            exportHTML(viewType = 'hybrid') {
+                const date = new Date().toLocaleString();
+                let html = `<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Изделия проекта - ${new Date().toLocaleDateString()}</title>
+    <style>
+        body { 
+            font-family: -apple-system, sans-serif; 
+            padding: 20px;
+            background: #f5f5f5;
+            margin: 0;
+        }
+        .header {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 { 
+            color: #333;
+            margin: 0 0 10px 0;
+        }
+        .date {
+            color: #666;
+            font-size: 14px;
+        }`;
 
-            // Регистрация Service Worker
-            async registerServiceWorker() {
-                // Проверяем, что мы не в артефакте Claude
-                if (window.location.hostname === 'www.claudeusercontent.com') {
-                    console.log('Service Worker отключен в артефакте Claude');
-                    return;
+                if (viewType === 'hybrid') {
+                    html += `
+        .product-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            page-break-inside: avoid;
+        }
+        .product-header {
+            background: #f8f9fa;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .product-name {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .product-article {
+            font-size: 14px;
+            color: #666;
+        }
+        .product-content {
+            padding: 24px;
+            display: flex;
+            gap: 24px;
+        }
+        .product-left {
+            flex: 1;
+        }
+        .info-section {
+            margin-bottom: 20px;
+        }
+        .info-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 6px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .info-value {
+            color: #333;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+        .product-questions {
+            flex: 1;
+            border-left: 1px solid #e0e0e0;
+            padding-left: 24px;
+        }
+        .questions-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .questions-title {
+            font-weight: 600;
+            color: #333;
+        }
+        .questions-stats {
+            background: #f0f0f0;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .questions-stats.complete {
+            background: #d4edda;
+            color: #155724;
+        }
+        .questions-stats.partial {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .question-item {
+            margin: 8px 0;
+            display: flex;
+            gap: 8px;
+        }
+        .checked { 
+            color: green; 
+            font-weight: 500;
+        }
+        .unchecked { 
+            color: #999; 
+        }
+        .images {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+        .images img { 
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        @media print {
+            body { background: white; }
+            .header { box-shadow: none; border: 1px solid #e0e0e0; }
+            .product-card { box-shadow: none; page-break-inside: avoid; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Изделия проекта</h1>
+        <div class="date">Дата экспорта: ${date}</div>
+    </div>`;
+                    
+                    this.products.forEach(product => {
+                        const totalQuestions = product.questions ? Object.keys(product.questions).length : 0;
+                        const answeredQuestions = product.questions ? 
+                            Object.values(product.questions).filter(q => q).length : 0;
+                        const statsClass = answeredQuestions === totalQuestions && totalQuestions > 0 ? 'complete' : 
+                                          answeredQuestions > 0 ? 'partial' : '';
+                        
+                        html += `
+        <div class="product-card">
+            <div class="product-header">
+                <div class="product-name">${product.name || 'Без названия'}</div>
+                <div class="product-article">Артикул: ${product.article || '—'}</div>
+            </div>
+            <div class="product-content">
+                <div class="product-left">`;
+                        
+                        if (product.images && product.images.length > 0) {
+                            html += '<div class="images">';
+                            product.images.forEach(img => {
+                                html += `<img src="${img}" alt="Изображение">`;
+                            });
+                            html += '</div>';
+                        }
+                        
+                        if (product.characteristics) {
+                            html += `
+                    <div class="info-section">
+                        <div class="info-label">Характеристики</div>
+                        <div class="info-value">${product.characteristics}</div>
+                    </div>`;
+                        }
+                        
+                        this.customColumns.forEach(column => {
+                            const value = product.customFields?.[column.id] || '';
+                            if (value) {
+                                html += `
+                    <div class="info-section">
+                        <div class="info-label">${column.name}</div>
+                        <div class="info-value">`;
+                                
+                                if (column.type === 'link') {
+                                    html += `<a href="${value}" target="_blank">${value}</a>`;
+                                } else if (column.type === 'image') {
+                                    html += `<img src="${value}" style="max-width: 100%; border-radius: 8px;">`;
+                                } else {
+                                    html += value;
+                                }
+                                
+                                html += `</div></div>`;
+                            }
+                        });
+                        
+                        html += `
+                </div>
+                <div class="product-questions">
+                    <div class="questions-header">
+                        <span class="questions-title">Вопросы по изделию</span>
+                        <span class="questions-stats ${statsClass}">✓ ${answeredQuestions} из ${totalQuestions}</span>
+                    </div>`;
+                        
+                        if (product.questions) {
+                            for (let [question, checked] of Object.entries(product.questions)) {
+                                html += `<div class="question-item ${checked ? 'checked' : 'unchecked'}">
+                                    ${checked ? '✓' : '○'} ${question}
+                                </div>`;
+                            }
+                        }
+                        
+                        html += `
+                </div>
+            </div>
+        </div>`;
+                    });
+                    
+                } else {
+                    // Табличный вид
+                    html += `
+        table { 
+            width: 100%; 
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td { 
+            padding: 12px; 
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th { 
+            background: #f8f9fa; 
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        .checked { 
+            color: green; 
+            font-weight: 500;
+        }
+        .unchecked { 
+            color: #999; 
+        }
+        .question-item {
+            margin: 4px 0;
+        }
+        .images {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .images img { 
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+        }
+        @media print {
+            body { background: white; }
+            .header { box-shadow: none; border: 1px solid #e0e0e0; }
+            table { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Изделия проекта</h1>
+        <div class="date">Дата экспорта: ${date}</div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Изображения</th>
+                <th>Наименование</th>
+                <th>Артикул</th>
+                <th>Характеристики</th>`;
+                    
+                    this.customColumns.forEach(col => {
+                        html += `<th>${col.name}</th>`;
+                    });
+                    
+                    html += `<th>Вопросы</th></tr></thead><tbody>`;
+                    
+                    this.products.forEach(product => {
+                        html += '<tr>';
+                        
+                        html += '<td><div class="images">';
+                        if (product.images && product.images.length > 0) {
+                            product.images.forEach(img => {
+                                html += `<img src="${img}" alt="Изображение">`;
+                            });
+                        } else {
+                            html += '<span style="color: #999;">—</span>';
+                        }
+                        html += '</div></td>';
+                        
+                        html += `
+                            <td>${product.name || ''}</td>
+                            <td>${product.article || ''}</td>
+                            <td>${product.characteristics || ''}</td>
+                        `;
+                        
+                        this.customColumns.forEach(col => {
+                            const value = product.customFields?.[col.id] || '';
+                            if (col.type === 'link' && value) {
+                                html += `<td><a href="${value}" target="_blank">${value}</a></td>`;
+                            } else if (col.type === 'image' && value) {
+                                html += `<td><img src="${value}" style="max-width: 100px; height: auto;"></td>`;
+                            } else {
+                                html += `<td>${value}</td>`;
+                            }
+                        });
+                        
+                        html += '<td>';
+                        if (product.questions) {
+                            for (let [question, checked] of Object.entries(product.questions)) {
+                                html += `<div class="question-item ${checked ? 'checked' : 'unchecked'}">
+                                    ${checked ? '✓' : '✗'} ${question}
+                                </div>`;
+                            }
+                        }
+                        html += '</td></tr>';
+                    });
+                    
+                    html += '</tbody></table>';
                 }
                 
-                if ('serviceWorker' in navigator) {
-                    try {
-                        // Используем относительный путь
-                        const swPath = './sw.js';
-                        const registration = await navigator.serviceWorker.register(swPath);
-                        console.log('Service Worker зарегистрирован');
-                        
-                        // Проверяем обновления каждый раз при загрузке
-                        registration.update();
-                        
-                        // Слушаем обновления
-                        registration.addEventListener('updatefound', () => {
-                            const newWorker = registration.installing;
-                            console.log('Найдено обновление Service Worker');
-                            
-                            newWorker.addEventListener('statechange', () => {
-                                if (newWorker.state === 'activated') {
-                                    // Автоматически показываем уведомление об обновлении
-                                    this.showStatus('Доступна новая версия. Обновите страницу.');
-                                    
-                                    // Если это критическое обновление, можно автоматически перезагрузить
-                                    // window.location.reload(true);
-                                }
-                            });
-                        });
-                        
-                        // Проверяем обновления каждые 30 секунд
-                        setInterval(() => {
-                            registration.update();
-                        }, 30000);
-                        
-                    } catch (error) {
-                        console.error('Ошибка регистрации Service Worker:', error);
-                    }
-                }
+                html += `
+    <div style="margin-top: 40px; padding: 20px; background: white; border-radius: 12px; text-align: center; color: #666;">
+        <small>Сгенерировано системой управления изделиями</small>
+    </div>
+</body>
+</html>`;
+                
+                const blob = new Blob([html], { type: 'text/html;charset=utf-8;' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = `products_${viewType}_${new Date().toISOString().split('T')[0]}.html`;
+                link.click();
+                
+                this.showStatus(`HTML документ (${viewType === 'hybrid' ? 'карточки' : 'таблица'}) создан`);
             },
-            
-            // Отправка в Telegram
+
             sendToTelegram() {
                 if (this.products.length === 0) {
                     this.showStatus('Нет данных для отправки');
@@ -1982,8 +2578,7 @@
                 this.updateTelegramPreview();
                 document.getElementById('telegramModal').classList.add('active');
             },
-            
-            // Обновление превью Telegram
+
             updateTelegramPreview() {
                 const format = document.getElementById('telegramFormat').value;
                 let message = '';
@@ -2000,7 +2595,6 @@
                             message += `❓ Вопросы:\n`;
                             for (let [question, checked] of Object.entries(product.questions)) {
                                 const status = checked ? '✅' : '⭕';
-                                // Обрезаем длинные вопросы для Telegram
                                 const shortQuestion = question.length > 100 ? 
                                     question.substring(0, 97) + '...' : question;
                                 message += `  ${status} ${shortQuestion}\n`;
@@ -2045,7 +2639,6 @@
                     }
                 }
                 
-                // Добавляем статистику
                 const totalProducts = this.products.length;
                 const totalQuestions = this.products.reduce((sum, p) => 
                     sum + (p.questions ? Object.keys(p.questions).length : 0), 0);
@@ -2059,31 +2652,24 @@
                 message += `• Решено: ${answeredQuestions} (${totalQuestions > 0 ? 
                     Math.round(answeredQuestions / totalQuestions * 100) : 0}%)\n`;
                 
-                // Показываем в превью (конвертируем markdown в обычный текст для превью)
                 const previewText = message
                     .replace(/\*/g, '')
                     .replace(/═/g, '─');
                 
                 document.getElementById('telegramPreview').textContent = previewText;
-                
-                // Сохраняем оригинальное сообщение для копирования
                 this.telegramMessage = message;
             },
-            
-            // Копировать в буфер обмена
+
             async copyToClipboard() {
                 try {
-                    // Для Telegram используем простой текст без markdown
                     const textMessage = this.telegramMessage.replace(/\*/g, '');
                     await navigator.clipboard.writeText(textMessage);
                     this.showStatus('Текст скопирован! Вставьте в Telegram');
                     
-                    // Закрываем модальное окно через секунду
                     setTimeout(() => {
                         this.closeModal('telegramModal');
                     }, 1000);
                 } catch (err) {
-                    // Fallback для старых браузеров
                     const textArea = document.createElement('textarea');
                     textArea.value = this.telegramMessage.replace(/\*/g, '');
                     textArea.style.position = 'fixed';
@@ -2105,13 +2691,60 @@
                     document.body.removeChild(textArea);
                 }
             },
-            
-            // Открыть в Telegram
+
             openInTelegram() {
-                // Telegram Web или приложение
                 const telegramUrl = 'https://t.me/';
                 window.open(telegramUrl, '_blank');
                 this.showStatus('Откройте нужный чат и вставьте скопированный текст');
+            },
+
+            showStatus(message) {
+                const statusBar = document.getElementById('statusBar');
+                statusBar.textContent = message;
+                statusBar.classList.add('show');
+                setTimeout(() => statusBar.classList.remove('show'), 3000);
+            },
+
+            toggleFab() {
+                const fabMain = document.getElementById('fabMain');
+                const fabMenu = document.getElementById('fabMenu');
+                fabMain.classList.toggle('active');
+                fabMenu.classList.toggle('active');
+            },
+
+            async registerServiceWorker() {
+                if (window.location.hostname === 'www.claudeusercontent.com') {
+                    console.log('Service Worker отключен в артефакте Claude');
+                    return;
+                }
+                
+                if ('serviceWorker' in navigator) {
+                    try {
+                        const swPath = './sw.js';
+                        const registration = await navigator.serviceWorker.register(swPath);
+                        console.log('Service Worker зарегистрирован');
+                        
+                        registration.update();
+                        
+                        registration.addEventListener('updatefound', () => {
+                            const newWorker = registration.installing;
+                            console.log('Найдено обновление Service Worker');
+                            
+                            newWorker.addEventListener('statechange', () => {
+                                if (newWorker.state === 'activated') {
+                                    this.showStatus('Доступна новая версия. Обновите страницу.');
+                                }
+                            });
+                        });
+                        
+                        setInterval(() => {
+                            registration.update();
+                        }, 30000);
+                        
+                    } catch (error) {
+                        console.error('Ошибка регистрации Service Worker:', error);
+                    }
+                }
             }
         };
 
@@ -2124,17 +2757,15 @@
                 name: document.getElementById('productName').value,
                 article: document.getElementById('productArticle').value,
                 characteristics: document.getElementById('productCharacteristics').value,
-                images: [], // Здесь нужно добавить сохранение изображений
+                images: [],
                 questions: {},
                 customFields: {}
             };
             
-            // Парсинг вопросов из текстового поля
             const questionsText = document.getElementById('productQuestions').value;
             if (questionsText) {
                 const questions = questionsText.split('\n').filter(q => q.trim());
                 questions.forEach(question => {
-                    // Сохраняем состояние чекбокса если редактируем
                     if (app.currentEditId) {
                         const existingProduct = app.products.find(p => p.id === app.currentEditId);
                         product.questions[question.trim()] = existingProduct.questions?.[question.trim()] || false;
@@ -2144,20 +2775,17 @@
                 });
             }
             
-            // Сохранение кастомных полей
             document.querySelectorAll('#customFieldsContainer input, #customFieldsContainer textarea').forEach(input => {
                 if (input.dataset.columnId) {
                     product.customFields[input.dataset.columnId] = input.value;
                 }
             });
             
-            // Сохранение изображений при редактировании
             if (app.currentEditId) {
                 const existingProduct = app.products.find(p => p.id === app.currentEditId);
                 product.images = existingProduct.images || [];
             }
             
-            // Добавление новых изображений
             const fileInput = document.querySelector('input[type="file"][accept="image/*"]');
             if (fileInput && fileInput.files.length > 0) {
                 for (let file of fileInput.files) {
@@ -2189,449 +2817,6 @@
         window.addEventListener('DOMContentLoaded', () => {
             app.init();
         });
-        // Подключаем новый вид
-app.render = renderHybridView;
-        // Дополнительные функции для карточного вида
-// Добавьте этот код в конец вашего app объекта
-
-// Новая функция рендера для гибридного вида
-function renderHybridView() {
-    const container = document.getElementById('productsContainer') || document.getElementById('tableBody').parentElement;
-    
-    if (!container) {
-        console.error('Контейнер не найден');
-        return;
-    }
-    
-    // Очищаем контейнер
-    container.innerHTML = '';
-    container.className = 'products-grid';
-    
-    // Добавляем стили если их нет
-    if (!document.getElementById('hybrid-styles')) {
-        const styles = document.createElement('style');
-        styles.id = 'hybrid-styles';
-        styles.innerHTML = `
-            .products-grid {
-                display: flex;
-                flex-direction: column;
-                gap: 24px;
-                padding: 20px 0;
-            }
-            
-            .product-card {
-                background: white;
-                border: 1px solid #e0e0e0;
-                border-radius: 12px;
-                overflow: hidden;
-                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            }
-            
-            .product-header {
-                background: #f8f9fa;
-                padding: 16px 24px;
-                border-bottom: 1px solid #e0e0e0;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-            
-            .product-title {
-                display: flex;
-                flex-direction: column;
-                gap: 4px;
-            }
-            
-            .product-name {
-                font-size: 20px;
-                font-weight: 600;
-                color: #333;
-            }
-            
-            .product-article {
-                font-size: 14px;
-                color: #666;
-            }
-            
-            .product-actions {
-                display: flex;
-                gap: 8px;
-            }
-            
-            .product-content {
-                display: flex;
-                gap: 24px;
-                padding: 24px;
-            }
-            
-            .product-images {
-                display: flex;
-                gap: 16px;
-            }
-            
-            .main-image-container {
-                position: relative;
-                width: 300px;
-                height: 300px;
-                flex-shrink: 0;
-                border-radius: 8px;
-                overflow: hidden;
-                background: #f5f5f5;
-                border: 1px solid #e0e0e0;
-            }
-            
-            .main-image {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                cursor: pointer;
-            }
-            
-            .delete-image-btn {
-                position: absolute;
-                top: 8px;
-                right: 8px;
-                width: 32px;
-                height: 32px;
-                background: rgba(255, 255, 255, 0.95);
-                border: 1px solid #ddd;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                opacity: 0;
-                transition: opacity 0.2s;
-                font-size: 18px;
-                color: #666;
-            }
-            
-            .main-image-container:hover .delete-image-btn {
-                opacity: 1;
-            }
-            
-            .delete-image-btn:hover {
-                background: white;
-                color: #dc3545;
-                border-color: #dc3545;
-            }
-            
-            .thumbnails-container {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
-                max-height: 300px;
-                overflow-y: auto;
-            }
-            
-            .thumbnail-wrapper {
-                position: relative;
-                width: 100px;
-                height: 100px;
-            }
-            
-            .image-thumb {
-                width: 100px;
-                height: 100px;
-                border-radius: 6px;
-                object-fit: cover;
-                cursor: pointer;
-                border: 2px solid transparent;
-                transition: all 0.2s;
-            }
-            
-            .image-thumb:hover {
-                border-color: #007AFF;
-            }
-            
-            .thumbnail-wrapper .delete-image-btn {
-                width: 24px;
-                height: 24px;
-                font-size: 14px;
-                top: 4px;
-                right: 4px;
-            }
-            
-            .add-image-btn {
-                width: 100px;
-                height: 100px;
-                border: 2px dashed #ddd;
-                border-radius: 6px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                cursor: pointer;
-                background: #fafafa;
-                font-size: 32px;
-                color: #999;
-                transition: all 0.2s;
-            }
-            
-            .add-image-btn:hover {
-                border-color: #007AFF;
-                background: #f0f8ff;
-                color: #007AFF;
-            }
-            
-            .product-questions {
-                flex: 1;
-                min-width: 0;
-            }
-            
-            .questions-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 16px;
-                padding-bottom: 8px;
-                border-bottom: 1px solid #e0e0e0;
-            }
-            
-            .questions-title {
-                font-weight: 600;
-                color: #333;
-            }
-            
-            .questions-stats {
-                background: #f0f0f0;
-                padding: 4px 12px;
-                border-radius: 20px;
-                font-size: 13px;
-                font-weight: 500;
-            }
-            
-            .questions-stats.complete {
-                background: #d4edda;
-                color: #155724;
-            }
-            
-            .questions-stats.partial {
-                background: #fff3cd;
-                color: #856404;
-            }
-            
-            .checkbox-container {
-                max-height: 400px;
-                overflow-y: auto;
-                padding-right: 8px;
-            }
-            
-            .checkbox-item {
-                display: flex;
-                align-items: flex-start;
-                gap: 12px;
-                padding: 8px;
-                margin-bottom: 4px;
-                border-radius: 6px;
-                transition: background 0.2s;
-            }
-            
-            .checkbox-item:hover {
-                background: #f8f9fa;
-            }
-            
-            .checkbox {
-                margin-top: 2px;
-                flex-shrink: 0;
-            }
-            
-            .question-text {
-                flex: 1;
-                line-height: 1.5;
-                color: #333;
-            }
-            
-            @media (max-width: 768px) {
-                .product-content {
-                    flex-direction: column;
-                }
-                
-                .main-image-container {
-                    width: 100%;
-                    height: 250px;
-                }
-                
-                .product-images {
-                    flex-direction: column;
-                }
-                
-                .thumbnails-container {
-                    flex-direction: row;
-                    max-height: none;
-                    overflow-x: auto;
-                }
-            }
-        `;
-        document.head.appendChild(styles);
-    }
-    
-    // Фильтруем и сортируем продукты
-    let products = [...app.products];
-    
-    // Рендерим каждое изделие
-    products.forEach(product => {
-        const card = createProductCard(product);
-        container.appendChild(card);
-    });
-    
-    if (products.length === 0) {
-        container.innerHTML = '<div style="text-align: center; padding: 60px; color: #999;">Нет изделий</div>';
-    }
-}
-
-// Создание карточки изделия
-function createProductCard(product) {
-    const card = document.createElement('div');
-    card.className = 'product-card';
-    
-    // Подсчет вопросов
-    const totalQuestions = product.questions ? Object.keys(product.questions).length : 0;
-    const answeredQuestions = product.questions ? 
-        Object.values(product.questions).filter(q => q).length : 0;
-    
-    const statsClass = answeredQuestions === totalQuestions ? 'complete' : 
-                      answeredQuestions > 0 ? 'partial' : '';
-    
-    // HTML карточки
-    card.innerHTML = `
-        <div class="product-header">
-            <div class="product-title">
-                <div class="product-name">${product.name || 'Без названия'}</div>
-                <div class="product-article">Артикул: ${product.article || '—'}</div>
-            </div>
-            <div class="product-actions">
-                <button class="btn" onclick="app.showAddModal('${product.id}')">✏️ Изменить</button>
-                <button class="btn" onclick="app.deleteProduct('${product.id}')">🗑 Удалить</button>
-            </div>
-        </div>
-        <div class="product-content">
-            <div class="product-images" id="images-${product.id}">
-                ${renderProductImages(product)}
-            </div>
-            <div class="product-questions">
-                <div class="questions-header">
-                    <span class="questions-title">Вопросы по изделию</span>
-                    <span class="questions-stats ${statsClass}">
-                        ✓ ${answeredQuestions} из ${totalQuestions}
-                    </span>
-                </div>
-                <div class="checkbox-container">
-                    ${renderProductQuestions(product)}
-                </div>
-            </div>
-        </div>
-    `;
-    
-    return card;
-}
-
-// Рендер изображений
-function renderProductImages(product) {
-    let html = '';
-    
-    if (product.images && product.images.length > 0) {
-        // Главное изображение
-        html += `
-            <div class="main-image-container">
-                <img src="${product.images[0]}" class="main-image" 
-                     id="main-${product.id}"
-                     onclick="app.showGallery('${product.id}', 0)">
-                <button class="delete-image-btn" 
-                        onclick="deleteProductImage('${product.id}', 0)">✕</button>
-            </div>
-            <div class="thumbnails-container">
-        `;
-        
-        // Миниатюры
-        for (let i = 1; i < product.images.length; i++) {
-            html += `
-                <div class="thumbnail-wrapper">
-                    <img src="${product.images[i]}" class="image-thumb"
-                         onclick="switchMainImage('${product.id}', ${i})">
-                    <button class="delete-image-btn"
-                            onclick="deleteProductImage('${product.id}', ${i})">✕</button>
-                </div>
-            `;
-        }
-        
-        // Кнопка добавления
-        html += `
-                <div class="add-image-btn" onclick="app.addImageToProduct('${product.id}')">+</div>
-            </div>
-        `;
-    } else {
-        // Пустое состояние
-        html = `
-            <div class="main-image-container" style="display: flex; align-items: center; justify-content: center;">
-                <div class="add-image-btn" style="width: 100%; height: 100%; font-size: 48px;"
-                     onclick="app.addImageToProduct('${product.id}')">+</div>
-            </div>
-        `;
-    }
-    
-    return html;
-}
-
-// Рендер вопросов
-function renderProductQuestions(product) {
-    let html = '';
-    
-    if (product.questions && Object.keys(product.questions).length > 0) {
-        Object.entries(product.questions).forEach(([question, checked], index) => {
-            const questionId = `q_${product.id}_${index}`;
-            html += `
-                <div class="checkbox-item">
-                    <input type="checkbox" class="checkbox" id="${questionId}"
-                           ${checked ? 'checked' : ''}
-                           onchange="app.toggleQuestion('${product.id}', '${question.replace(/'/g, "\\'")}', this.checked)">
-                    <label for="${questionId}" class="question-text">${question}</label>
-                </div>
-            `;
-        });
-    } else {
-        html = '<p style="color: #999; text-align: center; padding: 20px;">Нет вопросов</p>';
-    }
-    
-    return html;
-}
-
-// Удаление изображения
-function deleteProductImage(productId, imageIndex) {
-    if (!confirm('Удалить это изображение?')) return;
-    
-    const product = app.products.find(p => p.id === productId);
-    if (product && product.images) {
-        product.images.splice(imageIndex, 1);
-        app.saveProduct(product);
-        
-        // Обновляем только блок изображений
-        const imagesContainer = document.getElementById(`images-${productId}`);
-        if (imagesContainer) {
-            imagesContainer.innerHTML = renderProductImages(product);
-        }
-    }
-}
-
-// Переключение главного изображения
-function switchMainImage(productId, imageIndex) {
-    const product = app.products.find(p => p.id === productId);
-    if (product && product.images && product.images[imageIndex]) {
-        // Меняем местами
-        [product.images[0], product.images[imageIndex]] = 
-        [product.images[imageIndex], product.images[0]];
-        
-        app.saveProduct(product);
-        
-        // Обновляем изображения
-        const imagesContainer = document.getElementById(`images-${productId}`);
-        if (imagesContainer) {
-            imagesContainer.innerHTML = renderProductImages(product);
-        }
-    }
-}
-
-// Замените функцию render() в вашем app объекте на:
-// app.render = renderHybridView;
     </script>
 </body>
 </html>
