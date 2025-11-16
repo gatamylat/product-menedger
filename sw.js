@@ -1,5 +1,5 @@
 // Service Worker для офлайн работы
-const CACHE_NAME = 'product-manager-v2.1'; // Обновлена версия для Telegram функции
+const CACHE_NAME = 'product-manager-v2.2'; // Обновлена версия для исправления PWA
 const CACHE_PREFIX = 'product-manager-'; // Префикс для нашего приложения
 
 // Определяем текущий URL и базовый путь
@@ -9,18 +9,11 @@ const basePath = currentURL.pathname.substring(0, currentURL.pathname.lastIndexO
 // URL для кэширования - адаптивные пути
 const urlsToCache = [
     basePath, // Корневая папка
+    basePath + 'index.html',
     basePath + 'manifest.json',
     basePath + 'icon-192.png',
     basePath + 'icon-512.png'
 ];
-
-// Если есть product-manager.html, добавляем его
-if (basePath.includes('product-manager')) {
-    urlsToCache.push(self.location.href.replace('sw.js', 'product-manager.html'));
-} else {
-    // Иначе пробуем index.html
-    urlsToCache.push(basePath + 'index.html');
-}
 
 // Установка Service Worker
 self.addEventListener('install', event => {
