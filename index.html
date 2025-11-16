@@ -2189,6 +2189,449 @@
         window.addEventListener('DOMContentLoaded', () => {
             app.init();
         });
+        // Подключаем новый вид
+app.render = renderHybridView;
+        // Дополнительные функции для карточного вида
+// Добавьте этот код в конец вашего app объекта
+
+// Новая функция рендера для гибридного вида
+function renderHybridView() {
+    const container = document.getElementById('productsContainer') || document.getElementById('tableBody').parentElement;
+    
+    if (!container) {
+        console.error('Контейнер не найден');
+        return;
+    }
+    
+    // Очищаем контейнер
+    container.innerHTML = '';
+    container.className = 'products-grid';
+    
+    // Добавляем стили если их нет
+    if (!document.getElementById('hybrid-styles')) {
+        const styles = document.createElement('style');
+        styles.id = 'hybrid-styles';
+        styles.innerHTML = `
+            .products-grid {
+                display: flex;
+                flex-direction: column;
+                gap: 24px;
+                padding: 20px 0;
+            }
+            
+            .product-card {
+                background: white;
+                border: 1px solid #e0e0e0;
+                border-radius: 12px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            }
+            
+            .product-header {
+                background: #f8f9fa;
+                padding: 16px 24px;
+                border-bottom: 1px solid #e0e0e0;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            
+            .product-title {
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+            }
+            
+            .product-name {
+                font-size: 20px;
+                font-weight: 600;
+                color: #333;
+            }
+            
+            .product-article {
+                font-size: 14px;
+                color: #666;
+            }
+            
+            .product-actions {
+                display: flex;
+                gap: 8px;
+            }
+            
+            .product-content {
+                display: flex;
+                gap: 24px;
+                padding: 24px;
+            }
+            
+            .product-images {
+                display: flex;
+                gap: 16px;
+            }
+            
+            .main-image-container {
+                position: relative;
+                width: 300px;
+                height: 300px;
+                flex-shrink: 0;
+                border-radius: 8px;
+                overflow: hidden;
+                background: #f5f5f5;
+                border: 1px solid #e0e0e0;
+            }
+            
+            .main-image {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                cursor: pointer;
+            }
+            
+            .delete-image-btn {
+                position: absolute;
+                top: 8px;
+                right: 8px;
+                width: 32px;
+                height: 32px;
+                background: rgba(255, 255, 255, 0.95);
+                border: 1px solid #ddd;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                opacity: 0;
+                transition: opacity 0.2s;
+                font-size: 18px;
+                color: #666;
+            }
+            
+            .main-image-container:hover .delete-image-btn {
+                opacity: 1;
+            }
+            
+            .delete-image-btn:hover {
+                background: white;
+                color: #dc3545;
+                border-color: #dc3545;
+            }
+            
+            .thumbnails-container {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                max-height: 300px;
+                overflow-y: auto;
+            }
+            
+            .thumbnail-wrapper {
+                position: relative;
+                width: 100px;
+                height: 100px;
+            }
+            
+            .image-thumb {
+                width: 100px;
+                height: 100px;
+                border-radius: 6px;
+                object-fit: cover;
+                cursor: pointer;
+                border: 2px solid transparent;
+                transition: all 0.2s;
+            }
+            
+            .image-thumb:hover {
+                border-color: #007AFF;
+            }
+            
+            .thumbnail-wrapper .delete-image-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 14px;
+                top: 4px;
+                right: 4px;
+            }
+            
+            .add-image-btn {
+                width: 100px;
+                height: 100px;
+                border: 2px dashed #ddd;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                background: #fafafa;
+                font-size: 32px;
+                color: #999;
+                transition: all 0.2s;
+            }
+            
+            .add-image-btn:hover {
+                border-color: #007AFF;
+                background: #f0f8ff;
+                color: #007AFF;
+            }
+            
+            .product-questions {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .questions-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 16px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid #e0e0e0;
+            }
+            
+            .questions-title {
+                font-weight: 600;
+                color: #333;
+            }
+            
+            .questions-stats {
+                background: #f0f0f0;
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 13px;
+                font-weight: 500;
+            }
+            
+            .questions-stats.complete {
+                background: #d4edda;
+                color: #155724;
+            }
+            
+            .questions-stats.partial {
+                background: #fff3cd;
+                color: #856404;
+            }
+            
+            .checkbox-container {
+                max-height: 400px;
+                overflow-y: auto;
+                padding-right: 8px;
+            }
+            
+            .checkbox-item {
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 8px;
+                margin-bottom: 4px;
+                border-radius: 6px;
+                transition: background 0.2s;
+            }
+            
+            .checkbox-item:hover {
+                background: #f8f9fa;
+            }
+            
+            .checkbox {
+                margin-top: 2px;
+                flex-shrink: 0;
+            }
+            
+            .question-text {
+                flex: 1;
+                line-height: 1.5;
+                color: #333;
+            }
+            
+            @media (max-width: 768px) {
+                .product-content {
+                    flex-direction: column;
+                }
+                
+                .main-image-container {
+                    width: 100%;
+                    height: 250px;
+                }
+                
+                .product-images {
+                    flex-direction: column;
+                }
+                
+                .thumbnails-container {
+                    flex-direction: row;
+                    max-height: none;
+                    overflow-x: auto;
+                }
+            }
+        `;
+        document.head.appendChild(styles);
+    }
+    
+    // Фильтруем и сортируем продукты
+    let products = [...app.products];
+    
+    // Рендерим каждое изделие
+    products.forEach(product => {
+        const card = createProductCard(product);
+        container.appendChild(card);
+    });
+    
+    if (products.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 60px; color: #999;">Нет изделий</div>';
+    }
+}
+
+// Создание карточки изделия
+function createProductCard(product) {
+    const card = document.createElement('div');
+    card.className = 'product-card';
+    
+    // Подсчет вопросов
+    const totalQuestions = product.questions ? Object.keys(product.questions).length : 0;
+    const answeredQuestions = product.questions ? 
+        Object.values(product.questions).filter(q => q).length : 0;
+    
+    const statsClass = answeredQuestions === totalQuestions ? 'complete' : 
+                      answeredQuestions > 0 ? 'partial' : '';
+    
+    // HTML карточки
+    card.innerHTML = `
+        <div class="product-header">
+            <div class="product-title">
+                <div class="product-name">${product.name || 'Без названия'}</div>
+                <div class="product-article">Артикул: ${product.article || '—'}</div>
+            </div>
+            <div class="product-actions">
+                <button class="btn" onclick="app.showAddModal('${product.id}')">✏️ Изменить</button>
+                <button class="btn" onclick="app.deleteProduct('${product.id}')">🗑 Удалить</button>
+            </div>
+        </div>
+        <div class="product-content">
+            <div class="product-images" id="images-${product.id}">
+                ${renderProductImages(product)}
+            </div>
+            <div class="product-questions">
+                <div class="questions-header">
+                    <span class="questions-title">Вопросы по изделию</span>
+                    <span class="questions-stats ${statsClass}">
+                        ✓ ${answeredQuestions} из ${totalQuestions}
+                    </span>
+                </div>
+                <div class="checkbox-container">
+                    ${renderProductQuestions(product)}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    return card;
+}
+
+// Рендер изображений
+function renderProductImages(product) {
+    let html = '';
+    
+    if (product.images && product.images.length > 0) {
+        // Главное изображение
+        html += `
+            <div class="main-image-container">
+                <img src="${product.images[0]}" class="main-image" 
+                     id="main-${product.id}"
+                     onclick="app.showGallery('${product.id}', 0)">
+                <button class="delete-image-btn" 
+                        onclick="deleteProductImage('${product.id}', 0)">✕</button>
+            </div>
+            <div class="thumbnails-container">
+        `;
+        
+        // Миниатюры
+        for (let i = 1; i < product.images.length; i++) {
+            html += `
+                <div class="thumbnail-wrapper">
+                    <img src="${product.images[i]}" class="image-thumb"
+                         onclick="switchMainImage('${product.id}', ${i})">
+                    <button class="delete-image-btn"
+                            onclick="deleteProductImage('${product.id}', ${i})">✕</button>
+                </div>
+            `;
+        }
+        
+        // Кнопка добавления
+        html += `
+                <div class="add-image-btn" onclick="app.addImageToProduct('${product.id}')">+</div>
+            </div>
+        `;
+    } else {
+        // Пустое состояние
+        html = `
+            <div class="main-image-container" style="display: flex; align-items: center; justify-content: center;">
+                <div class="add-image-btn" style="width: 100%; height: 100%; font-size: 48px;"
+                     onclick="app.addImageToProduct('${product.id}')">+</div>
+            </div>
+        `;
+    }
+    
+    return html;
+}
+
+// Рендер вопросов
+function renderProductQuestions(product) {
+    let html = '';
+    
+    if (product.questions && Object.keys(product.questions).length > 0) {
+        Object.entries(product.questions).forEach(([question, checked], index) => {
+            const questionId = `q_${product.id}_${index}`;
+            html += `
+                <div class="checkbox-item">
+                    <input type="checkbox" class="checkbox" id="${questionId}"
+                           ${checked ? 'checked' : ''}
+                           onchange="app.toggleQuestion('${product.id}', '${question.replace(/'/g, "\\'")}', this.checked)">
+                    <label for="${questionId}" class="question-text">${question}</label>
+                </div>
+            `;
+        });
+    } else {
+        html = '<p style="color: #999; text-align: center; padding: 20px;">Нет вопросов</p>';
+    }
+    
+    return html;
+}
+
+// Удаление изображения
+function deleteProductImage(productId, imageIndex) {
+    if (!confirm('Удалить это изображение?')) return;
+    
+    const product = app.products.find(p => p.id === productId);
+    if (product && product.images) {
+        product.images.splice(imageIndex, 1);
+        app.saveProduct(product);
+        
+        // Обновляем только блок изображений
+        const imagesContainer = document.getElementById(`images-${productId}`);
+        if (imagesContainer) {
+            imagesContainer.innerHTML = renderProductImages(product);
+        }
+    }
+}
+
+// Переключение главного изображения
+function switchMainImage(productId, imageIndex) {
+    const product = app.products.find(p => p.id === productId);
+    if (product && product.images && product.images[imageIndex]) {
+        // Меняем местами
+        [product.images[0], product.images[imageIndex]] = 
+        [product.images[imageIndex], product.images[0]];
+        
+        app.saveProduct(product);
+        
+        // Обновляем изображения
+        const imagesContainer = document.getElementById(`images-${productId}`);
+        if (imagesContainer) {
+            imagesContainer.innerHTML = renderProductImages(product);
+        }
+    }
+}
+
+// Замените функцию render() в вашем app объекте на:
+// app.render = renderHybridView;
     </script>
 </body>
 </html>
