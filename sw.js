@@ -1,18 +1,14 @@
 // Service Worker для офлайн работы
-const CACHE_NAME = 'product-manager-v3.0'; // Обновлена версия для гибридного вида с переключателем
+const CACHE_NAME = 'product-manager-v3.2'; // Обновлена версия
 const CACHE_PREFIX = 'product-manager-'; // Префикс для нашего приложения
 
-// Определяем текущий URL и базовый путь
-const currentURL = new URL(self.location);
-const basePath = currentURL.pathname.substring(0, currentURL.pathname.lastIndexOf('/') + 1);
-
-// URL для кэширования - адаптивные пути
+// URL для кэширования
 const urlsToCache = [
-    basePath, // Корневая папка
-    basePath + 'index.html',
-    basePath + 'manifest.json',
-    basePath + 'icon-192.png',
-    basePath + 'icon-512.png'
+    './',
+    './index.html',
+    './manifest.json',
+    './icon-192.png',
+    './icon-512.png'
 ];
 
 // Установка Service Worker
