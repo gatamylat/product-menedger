@@ -116,11 +116,95 @@
 
         .toolbar {
             background: var(--background);
-            padding: 16px 24px;
+            padding: 12px 24px;
             max-width: 100%;
-            margin: 24px;
-            border-radius: var(--radius-lg);
+            margin: 0;
+            border-bottom: 1px solid var(--border-light);
+            position: sticky;
+            top: 73px;
+            z-index: 99;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        /* Выпадающее меню */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-btn {
+            background: var(--background);
+            border: 1px solid var(--border-light);
+            padding: 10px 20px;
+            border-radius: var(--radius-sm);
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dropdown-btn:hover {
+            background: var(--surface);
             box-shadow: var(--shadow-sm);
+        }
+
+        .dropdown-btn::after {
+            content: '▼';
+            font-size: 10px;
+            transition: transform 0.2s;
+        }
+
+        .dropdown.active .dropdown-btn::after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            background: var(--background);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown.active .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: var(--surface);
+        }
+
+        .dropdown-item:active {
+            background: var(--border-light);
         }
 
         .toolbar-content {
@@ -184,7 +268,7 @@
             display: flex;
             flex-direction: column;
             gap: 24px;
-            padding: 0 24px 40px;
+            padding: 24px;
         }
 
         .product-card {
@@ -466,8 +550,8 @@
         /* Табличный вид */
         .table-container {
             max-width: 100%;
-            margin: 0 auto 40px;
-            padding: 0 24px;
+            margin: 0;
+            padding: 24px;
             display: none;
         }
 
@@ -939,20 +1023,30 @@
             }
 
             .header .btn-group {
-                display: none;
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .dropdown {
+                flex: 1;
+            }
+
+            .dropdown-btn {
+                width: 100%;
+                justify-content: center;
             }
 
             .fab-container {
-                display: block;
+                display: none;
             }
 
             .toolbar {
-                margin: 16px;
                 padding: 12px 16px;
+                top: 57px;
             }
 
             .products-grid {
-                padding: 0 16px 80px;
+                padding: 16px;
                 gap: 16px;
             }
 
@@ -991,7 +1085,7 @@
             }
 
             .table-container {
-                padding: 0 16px;
+                padding: 16px;
             }
 
             .table-wrapper {
@@ -1052,32 +1146,37 @@
         <div class="header-content">
             <h1>Изделия проекта</h1>
             <div class="btn-group">
-                <button class="btn" onclick="app.showAddModal()">
+                <div class="dropdown" id="menuDropdown">
+                    <button class="dropdown-btn">⚙ Меню</button>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-item" onclick="app.showColumnManager(); app.closeDropdown();">
+                            ⚙ Управление столбцами
+                        </div>
+                        <div class="dropdown-item" onclick="app.exportCSV(); app.closeDropdown();">
+                            ↓ Экспорт CSV
+                        </div>
+                        <div class="dropdown-item" onclick="app.importCSV(); app.closeDropdown();">
+                            ↑ Импорт CSV
+                        </div>
+                        <div class="dropdown-item" onclick="app.exportHTML('hybrid'); app.closeDropdown();">
+                            📄 HTML (карточки)
+                        </div>
+                        <div class="dropdown-item" onclick="app.exportHTML('table'); app.closeDropdown();">
+                            📄 HTML (таблица)
+                        </div>
+                        <div class="dropdown-item" onclick="app.sendToTelegram(); app.closeDropdown();">
+                            ✈️ Отправить в Telegram
+                        </div>
+                        <div class="dropdown-item" onclick="app.backup(); app.closeDropdown();">
+                            💾 Создать резервную копию
+                        </div>
+                        <div class="dropdown-item" onclick="app.restore(); app.closeDropdown();">
+                            📂 Восстановить из копии
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="app.showAddModal()">
                     <span>+</span> Добавить изделие
-                </button>
-                <button class="btn" onclick="app.showColumnManager()">
-                    ⚙ Столбцы
-                </button>
-                <button class="btn" onclick="app.exportCSV()">
-                    ↓ CSV
-                </button>
-                <button class="btn" onclick="app.importCSV()">
-                    ↑ CSV
-                </button>
-                <button class="btn" onclick="app.exportHTML('hybrid')">
-                    📄 HTML (карточки)
-                </button>
-                <button class="btn" onclick="app.exportHTML('table')">
-                    📄 HTML (таблица)
-                </button>
-                <button class="btn" onclick="app.sendToTelegram()">
-                    ✈️ Telegram
-                </button>
-                <button class="btn" onclick="app.backup()">
-                    💾 Backup
-                </button>
-                <button class="btn" onclick="app.restore()">
-                    📂 Restore
                 </button>
             </div>
         </div>
@@ -1255,48 +1354,6 @@
                 <span class="fab-label">Добавить изделие</span>
                 <button class="fab-btn" onclick="app.showAddModal(); app.toggleFab();">
                     <span>➕</span>
-                </button>
-            </div>
-            <div class="fab-item">
-                <span class="fab-label">Столбцы</span>
-                <button class="fab-btn" onclick="app.showColumnManager(); app.toggleFab();">
-                    <span>⚙️</span>
-                </button>
-            </div>
-            <div class="fab-item">
-                <span class="fab-label">Экспорт CSV</span>
-                <button class="fab-btn" onclick="app.exportCSV(); app.toggleFab();">
-                    <span>📊</span>
-                </button>
-            </div>
-            <div class="fab-item">
-                <span class="fab-label">HTML карточки</span>
-                <button class="fab-btn" onclick="app.exportHTML('hybrid'); app.toggleFab();">
-                    <span>📋</span>
-                </button>
-            </div>
-            <div class="fab-item">
-                <span class="fab-label">HTML таблица</span>
-                <button class="fab-btn" onclick="app.exportHTML('table'); app.toggleFab();">
-                    <span>📄</span>
-                </button>
-            </div>
-            <div class="fab-item">
-                <span class="fab-label">Telegram</span>
-                <button class="fab-btn" onclick="app.sendToTelegram(); app.toggleFab();">
-                    <span>✈️</span>
-                </button>
-            </div>
-            <div class="fab-item">
-                <span class="fab-label">Backup</span>
-                <button class="fab-btn" onclick="app.backup(); app.toggleFab();">
-                    <span>💾</span>
-                </button>
-            </div>
-            <div class="fab-item">
-                <span class="fab-label">Restore</span>
-                <button class="fab-btn" onclick="app.restore(); app.toggleFab();">
-                    <span>📂</span>
                 </button>
             </div>
         </div>
@@ -2712,6 +2769,13 @@
                 fabMenu.classList.toggle('active');
             },
 
+            closeDropdown() {
+                const dropdown = document.getElementById('menuDropdown');
+                if (dropdown) {
+                    dropdown.classList.remove('active');
+                }
+            },
+
             async registerServiceWorker() {
                 if (window.location.hostname === 'www.claudeusercontent.com') {
                     console.log('Service Worker отключен в артефакте Claude');
@@ -2816,6 +2880,22 @@
         // Инициализация при загрузке
         window.addEventListener('DOMContentLoaded', () => {
             app.init();
+            
+            // Обработчик для выпадающего меню
+            const dropdown = document.getElementById('menuDropdown');
+            const dropdownBtn = dropdown.querySelector('.dropdown-btn');
+            
+            dropdownBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdown.classList.toggle('active');
+            });
+            
+            // Закрытие меню при клике вне его
+            document.addEventListener('click', (e) => {
+                if (!dropdown.contains(e.target)) {
+                    dropdown.classList.remove('active');
+                }
+            });
         });
     </script>
 </body>
