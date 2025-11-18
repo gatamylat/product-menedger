@@ -129,7 +129,7 @@
 
         /* Блок задач архитектора/менеджера */
         .architect-tasks-section {
-            background: #fff9e6;
+            background: var(--background);
             border: 2px solid #ffd700;
             border-radius: var(--radius-lg);
             padding: 24px;
@@ -155,6 +155,28 @@
             color: #b8860b;
         }
 
+        .architect-tasks-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .architect-tasks-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .architect-tasks-column-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #b8860b;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .architect-tasks-content {
             display: grid;
             gap: 8px;
@@ -165,13 +187,13 @@
             align-items: flex-start;
             gap: 12px;
             padding: 10px;
-            background: white;
+            background: var(--surface);
             border-radius: var(--radius-sm);
             transition: all 0.2s;
         }
 
         .architect-task-item:hover {
-            background: #fffdf5;
+            background: #f8f9fa;
         }
 
         .architect-task-item input[type="checkbox"] {
@@ -1120,6 +1142,10 @@
                 top: 57px;
             }
 
+            .architect-tasks-grid {
+                grid-template-columns: 1fr;
+            }
+
             .products-grid {
                 padding: 16px;
                 gap: 16px;
@@ -1273,21 +1299,40 @@
         </div>
     </div>
 
-    <!-- Задачи архитектора и/или менеджера -->
+    <!-- Задачи архитектора и менеджера -->
     <div class="architect-tasks-section" id="architectTasksSection">
         <div class="architect-tasks-header">
             <div class="architect-tasks-title">
                 <span>⭐</span>
-                <span>Задачи архитектора и/или менеджера</span>
+                <span>Задачи архитектора и менеджера</span>
             </div>
             <button class="edit-architect-tasks-btn" onclick="app.showArchitectTasksModal()">
                 ✏️ Редактировать
             </button>
         </div>
-        <div class="architect-tasks-content" id="architectTasksContent">
-            <p style="color: #999; text-align: center; padding: 20px;">
-                Нажмите "Редактировать" чтобы добавить задачи
-            </p>
+        <div class="architect-tasks-grid">
+            <div class="architect-tasks-column">
+                <div class="architect-tasks-column-title">
+                    <span>👤</span>
+                    <span>Задачи менеджера</span>
+                </div>
+                <div id="managerTasksContent">
+                    <p style="color: #999; text-align: center; padding: 20px; font-size: 14px;">
+                        Нажмите "Редактировать"
+                    </p>
+                </div>
+            </div>
+            <div class="architect-tasks-column">
+                <div class="architect-tasks-column-title">
+                    <span>📐</span>
+                    <span>Задачи архитектора</span>
+                </div>
+                <div id="architectTasksContent">
+                    <p style="color: #999; text-align: center; padding: 20px; font-size: 14px;">
+                        Нажмите "Редактировать"
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1382,24 +1427,33 @@
 
     <!-- Модальное окно задач архитектора -->
     <div class="modal" id="architectTasksModal">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 900px;">
             <div class="modal-header">
-                <h3>⭐ Задачи архитектора и/или менеджера</h3>
+                <h3>⭐ Задачи архитектора и менеджера</h3>
                 <button class="close-btn" onclick="app.closeModal('architectTasksModal')">✕</button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Добавьте задачи (каждая с новой строки)</label>
-                    <textarea class="form-textarea" id="architectTasksTextarea" 
-                              placeholder="Согласовать чертеж с заказчиком
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <div class="form-group">
+                        <label class="form-label">👤 Задачи менеджера</label>
+                        <textarea class="form-textarea" id="managerTasksTextarea" 
+                                  placeholder="Согласовать договор с заказчиком
+Подготовить смету
+Уточнить сроки поставки" 
+                                  style="min-height: 250px;"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">📐 Задачи архитектора</label>
+                        <textarea class="form-textarea" id="architectTasksTextarea" 
+                                  placeholder="Согласовать чертеж с заказчиком
 Уточнить размеры помещения
-Подобрать фурнитуру
-Получить образцы материалов" 
-                              style="min-height: 200px;"></textarea>
-                    <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
-                        💡 Эти задачи будут отображаться сверху, над списком изделий
-                    </small>
+Подобрать фурнитуру" 
+                                  style="min-height: 250px;"></textarea>
+                    </div>
                 </div>
+                <small style="color: #666; font-size: 12px; margin-top: 10px; display: block;">
+                    💡 Каждая задача с новой строки. Эти задачи будут отображаться сверху над списком изделий
+                </small>
             </div>
             <div class="modal-footer">
                 <button class="btn" onclick="app.closeModal('architectTasksModal')">Отмена</button>
@@ -1495,6 +1549,7 @@
             db: null,
             products: [],
             customColumns: [],
+            managerTasks: {},
             architectTasks: {},
             currentEditId: null,
             sortColumn: null,
@@ -1506,9 +1561,9 @@
                 await this.initDB();
                 await this.loadCustomColumns();
                 await this.loadProducts();
-                await this.loadArchitectTasks();
+                await this.loadProjectTasks();
                 this.render();
-                this.renderArchitectTasks();
+                this.renderProjectTasks();
                 this.registerServiceWorker();
             },
 
@@ -1569,86 +1624,137 @@
                 });
             },
 
-            async loadArchitectTasks() {
+            async loadProjectTasks() {
                 return new Promise((resolve, reject) => {
                     const transaction = this.db.transaction(['projectData'], 'readonly');
                     const objectStore = transaction.objectStore('projectData');
-                    const request = objectStore.get('architectTasks');
                     
-                    request.onsuccess = () => {
-                        this.architectTasks = request.result?.value || {};
-                        resolve();
+                    const managerRequest = objectStore.get('managerTasks');
+                    const architectRequest = objectStore.get('architectTasks');
+                    
+                    let completed = 0;
+                    const checkComplete = () => {
+                        completed++;
+                        if (completed === 2) resolve();
                     };
-                    request.onerror = () => reject(request.error);
+                    
+                    managerRequest.onsuccess = () => {
+                        this.managerTasks = managerRequest.result?.value || {};
+                        checkComplete();
+                    };
+                    managerRequest.onerror = () => reject(managerRequest.error);
+                    
+                    architectRequest.onsuccess = () => {
+                        this.architectTasks = architectRequest.result?.value || {};
+                        checkComplete();
+                    };
+                    architectRequest.onerror = () => reject(architectRequest.error);
                 });
             },
 
-            async saveArchitectTasksData() {
+            async saveProjectTasksData() {
                 return new Promise((resolve, reject) => {
                     const transaction = this.db.transaction(['projectData'], 'readwrite');
                     const objectStore = transaction.objectStore('projectData');
-                    const request = objectStore.put({ 
-                        key: 'architectTasks', 
-                        value: this.architectTasks 
-                    });
                     
-                    request.onsuccess = () => resolve();
-                    request.onerror = () => reject(request.error);
+                    objectStore.put({ key: 'managerTasks', value: this.managerTasks });
+                    objectStore.put({ key: 'architectTasks', value: this.architectTasks });
+                    
+                    transaction.oncomplete = () => resolve();
+                    transaction.onerror = () => reject(transaction.error);
                 });
             },
 
             showArchitectTasksModal() {
-                const tasksText = Object.keys(this.architectTasks).join('\n');
-                document.getElementById('architectTasksTextarea').value = tasksText;
+                const managerTasksText = Object.keys(this.managerTasks).join('\n');
+                const architectTasksText = Object.keys(this.architectTasks).join('\n');
+                document.getElementById('managerTasksTextarea').value = managerTasksText;
+                document.getElementById('architectTasksTextarea').value = architectTasksText;
                 document.getElementById('architectTasksModal').classList.add('active');
             },
 
             async saveArchitectTasks() {
-                const text = document.getElementById('architectTasksTextarea').value;
-                const newTasks = {};
+                const managerText = document.getElementById('managerTasksTextarea').value;
+                const architectText = document.getElementById('architectTasksTextarea').value;
                 
-                if (text.trim()) {
-                    text.split('\n')
+                const newManagerTasks = {};
+                const newArchitectTasks = {};
+                
+                if (managerText.trim()) {
+                    managerText.split('\n')
                         .filter(t => t.trim())
                         .forEach(task => {
                             const trimmed = task.trim();
-                            newTasks[trimmed] = this.architectTasks[trimmed] || false;
+                            newManagerTasks[trimmed] = this.managerTasks[trimmed] || false;
                         });
                 }
                 
-                this.architectTasks = newTasks;
-                await this.saveArchitectTasksData();
-                this.renderArchitectTasks();
+                if (architectText.trim()) {
+                    architectText.split('\n')
+                        .filter(t => t.trim())
+                        .forEach(task => {
+                            const trimmed = task.trim();
+                            newArchitectTasks[trimmed] = this.architectTasks[trimmed] || false;
+                        });
+                }
+                
+                this.managerTasks = newManagerTasks;
+                this.architectTasks = newArchitectTasks;
+                await this.saveProjectTasksData();
+                this.renderProjectTasks();
                 this.closeModal('architectTasksModal');
                 this.showStatus('Задачи сохранены');
             },
 
-            async toggleArchitectTask(taskName) {
-                this.architectTasks[taskName] = !this.architectTasks[taskName];
-                await this.saveArchitectTasksData();
-                this.renderArchitectTasks();
+            async toggleManagerTask(taskName) {
+                this.managerTasks[taskName] = !this.managerTasks[taskName];
+                await this.saveProjectTasksData();
+                this.renderProjectTasks();
             },
 
-            renderArchitectTasks() {
-                const container = document.getElementById('architectTasksContent');
-                const section = document.getElementById('architectTasksSection');
+            async toggleArchitectTask(taskName) {
+                this.architectTasks[taskName] = !this.architectTasks[taskName];
+                await this.saveProjectTasksData();
+                this.renderProjectTasks();
+            },
+
+            renderProjectTasks() {
+                const managerContainer = document.getElementById('managerTasksContent');
+                const architectContainer = document.getElementById('architectTasksContent');
                 
+                // Менеджер
+                if (Object.keys(this.managerTasks).length === 0) {
+                    managerContainer.innerHTML = '<p style="color: #999; text-align: center; padding: 20px; font-size: 14px;">Нажмите "Редактировать"</p>';
+                } else {
+                    let html = '';
+                    for (let [task, checked] of Object.entries(this.managerTasks)) {
+                        html += `
+                            <div class="architect-task-item">
+                                <input type="checkbox" ${checked ? 'checked' : ''} 
+                                       onchange="app.toggleManagerTask('${this.escapeHtml(task)}')">
+                                <span class="architect-task-text">${task}</span>
+                            </div>
+                        `;
+                    }
+                    managerContainer.innerHTML = html;
+                }
+                
+                // Архитектор
                 if (Object.keys(this.architectTasks).length === 0) {
-                    container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Нажмите "Редактировать" чтобы добавить задачи</p>';
-                    return;
+                    architectContainer.innerHTML = '<p style="color: #999; text-align: center; padding: 20px; font-size: 14px;">Нажмите "Редактировать"</p>';
+                } else {
+                    let html = '';
+                    for (let [task, checked] of Object.entries(this.architectTasks)) {
+                        html += `
+                            <div class="architect-task-item">
+                                <input type="checkbox" ${checked ? 'checked' : ''} 
+                                       onchange="app.toggleArchitectTask('${this.escapeHtml(task)}')">
+                                <span class="architect-task-text">${task}</span>
+                            </div>
+                        `;
+                    }
+                    architectContainer.innerHTML = html;
                 }
-                
-                let html = '';
-                for (let [task, checked] of Object.entries(this.architectTasks)) {
-                    html += `
-                        <div class="architect-task-item">
-                            <input type="checkbox" ${checked ? 'checked' : ''} 
-                                   onchange="app.toggleArchitectTask('${this.escapeHtml(task)}')">
-                            <span class="architect-task-text">${task}</span>
-                        </div>
-                    `;
-                }
-                container.innerHTML = html;
             },
 
             async saveProduct(product) {
@@ -2424,10 +2530,11 @@
 
             async backup() {
                 const backup = {
-                    version: 2,
+                    version: 3,
                     date: new Date().toISOString(),
                     products: this.products,
                     columns: this.customColumns,
+                    managerTasks: this.managerTasks,
                     architectTasks: this.architectTasks
                 };
                 
@@ -2471,16 +2578,23 @@
                             await columnStore.add(column);
                         }
                         
-                        // Восстановление задач архитектора
+                        // Восстановление задач
+                        if (backup.managerTasks) {
+                            this.managerTasks = backup.managerTasks;
+                        }
                         if (backup.architectTasks) {
                             this.architectTasks = backup.architectTasks;
-                            await this.saveArchitectTasksData();
                         }
+                        // Для старых бэкапов (версия 2)
+                        if (!backup.managerTasks && backup.architectTasks) {
+                            this.managerTasks = {};
+                        }
+                        await this.saveProjectTasksData();
                         
                         await this.loadCustomColumns();
                         await this.loadProducts();
                         this.render();
-                        this.renderArchitectTasks();
+                        this.renderProjectTasks();
                         
                         this.showStatus('Данные восстановлены');
                     } catch (error) {
@@ -2587,24 +2701,36 @@
         <div class="date">Дата экспорта: ${date}</div>
     </div>`;
                     
-                    // Задачи архитектора/менеджера - компактно
-                    if (Object.keys(this.architectTasks).length > 0) {
+                    // Задачи менеджера и архитектора
+                    const hasManagerTasks = Object.keys(this.managerTasks).length > 0;
+                    const hasArchitectTasks = Object.keys(this.architectTasks).length > 0;
+                    
+                    if (hasManagerTasks || hasArchitectTasks) {
                         html += `
-    <div style="background: #fff9e6; border: 1px solid #ffd700; border-radius: 8px; padding: 12px; margin: 16px 0; font-size: 12px;">
-        <div style="font-weight: 600; color: #b8860b; margin-bottom: 6px;">⭐ Задачи архитектора/менеджера</div>`;
-                        let taskCount = 0;
-                        for (let [task, checked] of Object.entries(this.architectTasks)) {
-                            const shortTask = task.length > 50 ? task.substring(0, 47) + '...' : task;
-                            html += `<div class="${checked ? 'checked' : 'unchecked'}" style="margin: 2px 0;">${checked ? '✓' : '○'} ${shortTask}</div>`;
-                            taskCount++;
-                            if (taskCount >= 5) {
-                                const remaining = Object.keys(this.architectTasks).length - 5;
-                                if (remaining > 0) {
-                                    html += `<div style="color: #999; font-size: 11px; margin-top: 4px;">+${remaining} ещё...</div>`;
-                                }
-                                break;
+    <div style="border: 2px solid #ffd700; border-radius: 8px; padding: 12px; margin: 16px 0; font-size: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">`;
+                        
+                        // Задачи менеджера
+                        if (hasManagerTasks) {
+                            html += `
+        <div>
+            <div style="font-weight: 600; color: #b8860b; margin-bottom: 6px;">👤 Задачи менеджера</div>`;
+                            for (let [task, checked] of Object.entries(this.managerTasks)) {
+                                html += `<div class="${checked ? 'checked' : 'unchecked'}" style="margin: 2px 0;">${checked ? '✓' : '○'} ${task}</div>`;
                             }
+                            html += `</div>`;
                         }
+                        
+                        // Задачи архитектора
+                        if (hasArchitectTasks) {
+                            html += `
+        <div>
+            <div style="font-weight: 600; color: #b8860b; margin-bottom: 6px;">📐 Задачи архитектора</div>`;
+                            for (let [task, checked] of Object.entries(this.architectTasks)) {
+                                html += `<div class="${checked ? 'checked' : 'unchecked'}" style="margin: 2px 0;">${checked ? '✓' : '○'} ${task}</div>`;
+                            }
+                            html += `</div>`;
+                        }
+                        
                         html += `</div>`;
                     }
                     
@@ -2612,6 +2738,7 @@
     <table>
         <thead>
             <tr>
+                <th style="width: 40px;">№</th>
                 <th style="width: 80px;">Фото</th>
                 <th>Наименование</th>
                 <th>Артикул</th>`;
@@ -2622,8 +2749,11 @@
                     
                     html += `<th style="width: 280px;">Вопросы</th></tr></thead><tbody>`;
                     
-                    this.products.forEach(product => {
+                    this.products.forEach((product, index) => {
                         html += '<tr>';
+                        
+                        // Номер
+                        html += `<td style="text-align: center; font-weight: 600; color: #666;">${index + 1}</td>`;
                         
                         // Только первое изображение
                         html += '<td>';
@@ -2804,26 +2934,56 @@
         <div class="date">Дата экспорта: ${date}</div>
     </div>`;
                     
-                    // Задачи архитектора/менеджера
-                    if (Object.keys(this.architectTasks).length > 0) {
+                    // Задачи менеджера и архитектора
+                    const hasManagerTasks = Object.keys(this.managerTasks).length > 0;
+                    const hasArchitectTasks = Object.keys(this.architectTasks).length > 0;
+                    
+                    if (hasManagerTasks || hasArchitectTasks) {
                         html += `
-    <div style="background: #fff9e6; border: 2px solid #ffd700; border-radius: 12px; padding: 24px; margin: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #ffd700;">
-            <span style="font-size: 20px;">⭐</span>
-            <span style="font-size: 18px; font-weight: 600; color: #b8860b;">Задачи архитектора и/или менеджера</span>
-        </div>`;
-                        for (let [task, checked] of Object.entries(this.architectTasks)) {
+    <div style="border: 2px solid #ffd700; border-radius: 12px; padding: 24px; margin: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">`;
+                        
+                        // Задачи менеджера
+                        if (hasManagerTasks) {
                             html += `
-        <div style="display: flex; gap: 12px; padding: 10px; background: white; border-radius: 8px; margin-bottom: 8px;">
-            <span style="color: ${checked ? 'green' : '#999'}; font-weight: 500; font-size: 16px;">${checked ? '✓' : '○'}</span>
-            <span style="line-height: 1.5; ${checked ? 'color: #333;' : 'color: #666;'}">${task}</span>
-        </div>`;
+        <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #ffd700;">
+                <span style="font-size: 18px;">👤</span>
+                <span style="font-size: 16px; font-weight: 600; color: #b8860b;">Задачи менеджера</span>
+            </div>`;
+                            for (let [task, checked] of Object.entries(this.managerTasks)) {
+                                html += `
+            <div style="display: flex; gap: 12px; padding: 10px; background: #f8f9fa; border-radius: 8px; margin-bottom: 8px;">
+                <span style="color: ${checked ? 'green' : '#999'}; font-weight: 500; font-size: 16px;">${checked ? '✓' : '○'}</span>
+                <span style="line-height: 1.5; ${checked ? 'color: #333;' : 'color: #666;'}">${task}</span>
+            </div>`;
+                            }
+                            html += `</div>`;
                         }
+                        
+                        // Задачи архитектора
+                        if (hasArchitectTasks) {
+                            html += `
+        <div>
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #ffd700;">
+                <span style="font-size: 18px;">📐</span>
+                <span style="font-size: 16px; font-weight: 600; color: #b8860b;">Задачи архитектора</span>
+            </div>`;
+                            for (let [task, checked] of Object.entries(this.architectTasks)) {
+                                html += `
+            <div style="display: flex; gap: 12px; padding: 10px; background: #f8f9fa; border-radius: 8px; margin-bottom: 8px;">
+                <span style="color: ${checked ? 'green' : '#999'}; font-weight: 500; font-size: 16px;">${checked ? '✓' : '○'}</span>
+                <span style="line-height: 1.5; ${checked ? 'color: #333;' : 'color: #666;'}">${task}</span>
+            </div>`;
+                            }
+                            html += `</div>`;
+                        }
+                        
                         html += `</div>`;
                     }
                     
                     html += ``;
                     
+                    let cardNumber = 1;
                     this.products.forEach(product => {
                         const totalQuestions = product.questions ? Object.keys(product.questions).length : 0;
                         const answeredQuestions = product.questions ? 
@@ -2834,8 +2994,13 @@
                         html += `
         <div class="product-card">
             <div class="product-header">
-                <div class="product-name">${product.name || 'Без названия'}</div>
-                <div class="product-article">Артикул: ${product.article || '—'}</div>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 20px; font-weight: 700; color: #666; background: #f0f0f0; padding: 4px 12px; border-radius: 8px;">${cardNumber}</span>
+                    <div>
+                        <div class="product-name">${product.name || 'Без названия'}</div>
+                        <div class="product-article">Артикул: ${product.article || '—'}</div>
+                    </div>
+                </div>
             </div>
             <div class="product-content">
                 <div class="product-left">`;
@@ -2896,6 +3061,7 @@
                 </div>
             </div>
         </div>`;
+                        cardNumber++;
                     });
                     
                 } else {
@@ -2960,20 +3126,48 @@
         <div class="date">Дата экспорта: ${date}</div>
     </div>`;
                     
-                    // Задачи архитектора/менеджера
-                    if (Object.keys(this.architectTasks).length > 0) {
+                    // Задачи менеджера и архитектора  
+                    const hasManagerTasks = Object.keys(this.managerTasks).length > 0;
+                    const hasArchitectTasks = Object.keys(this.architectTasks).length > 0;
+                    
+                    if (hasManagerTasks || hasArchitectTasks) {
                         html += `
-    <div style="background: #fff9e6; border: 2px solid #ffd700; border-radius: 12px; padding: 20px; margin: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #ffd700;">
-            <span style="font-size: 18px;">⭐</span>
-            <span style="font-size: 16px; font-weight: 600; color: #b8860b;">Задачи архитектора и/или менеджера</span>
-        </div>`;
-                        for (let [task, checked] of Object.entries(this.architectTasks)) {
+    <div style="border: 2px solid #ffd700; border-radius: 12px; padding: 20px; margin: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">`;
+                        
+                        // Задачи менеджера
+                        if (hasManagerTasks) {
                             html += `
-        <div class="question-item ${checked ? 'checked' : 'unchecked'}">
-            ${checked ? '✓' : '✗'} ${task}
-        </div>`;
+        <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #ffd700;">
+                <span style="font-size: 18px;">👤</span>
+                <span style="font-size: 16px; font-weight: 600; color: #b8860b;">Задачи менеджера</span>
+            </div>`;
+                            for (let [task, checked] of Object.entries(this.managerTasks)) {
+                                html += `
+            <div class="question-item ${checked ? 'checked' : 'unchecked'}">
+                ${checked ? '✓' : '✗'} ${task}
+            </div>`;
+                            }
+                            html += `</div>`;
                         }
+                        
+                        // Задачи архитектора
+                        if (hasArchitectTasks) {
+                            html += `
+        <div>
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #ffd700;">
+                <span style="font-size: 18px;">📐</span>
+                <span style="font-size: 16px; font-weight: 600; color: #b8860b;">Задачи архитектора</span>
+            </div>`;
+                            for (let [task, checked] of Object.entries(this.architectTasks)) {
+                                html += `
+            <div class="question-item ${checked ? 'checked' : 'unchecked'}">
+                ${checked ? '✓' : '✗'} ${task}
+            </div>`;
+                            }
+                            html += `</div>`;
+                        }
+                        
                         html += `</div>`;
                     }
                     
@@ -2981,6 +3175,7 @@
     <table>
         <thead>
             <tr>
+                <th style="width: 40px;">№</th>
                 <th>Изображения</th>
                 <th>Наименование</th>
                 <th>Артикул</th>
@@ -2992,8 +3187,11 @@
                     
                     html += `<th>Вопросы</th></tr></thead><tbody>`;
                     
-                    this.products.forEach(product => {
+                    this.products.forEach((product, index) => {
                         html += '<tr>';
+                        
+                        // Номер
+                        html += `<td style="text-align: center; font-weight: 600; color: #666;">${index + 1}</td>`;
                         
                         html += '<td><div class="images">';
                         if (product.images && product.images.length > 0) {
@@ -3039,9 +3237,6 @@
                 }
                 
                 html += `
-    <div style="margin-top: 40px; padding: 20px; background: white; border-radius: 12px; text-align: center; color: #666;">
-        <small>Сгенерировано системой управления изделиями</small>
-    </div>
 </body>
 </html>`;
                 
