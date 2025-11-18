@@ -1164,6 +1164,9 @@
                         <div class="dropdown-item" onclick="app.exportHTML('table'); app.closeDropdown();">
                             📄 HTML (таблица)
                         </div>
+                        <div class="dropdown-item" onclick="app.exportHTML('compact'); app.closeDropdown();">
+                            📄 HTML (компактный)
+                        </div>
                         <div class="dropdown-item" onclick="app.sendToTelegram(); app.closeDropdown();">
                             ✈️ Отправить в Telegram
                         </div>
@@ -2297,7 +2300,145 @@
             font-size: 14px;
         }`;
 
-                if (viewType === 'hybrid') {
+                if (viewType === 'compact') {
+                    // КОМПАКТНЫЙ ВИД
+                    html += `
+        table { 
+            width: 100%; 
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            font-size: 13px;
+        }
+        th, td { 
+            padding: 8px 10px; 
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        th { 
+            background: #f8f9fa; 
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        tr:hover {
+            background: #f8f9fa;
+        }
+        .compact-image { 
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid #e0e0e0;
+        }
+        .questions-compact {
+            font-size: 12px;
+            line-height: 1.4;
+        }
+        .question-compact {
+            margin: 2px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 250px;
+        }
+        .checked { 
+            color: green; 
+            font-weight: 500;
+        }
+        .unchecked { 
+            color: #999; 
+        }
+        @media print {
+            body { background: white; }
+            .header { box-shadow: none; border: 1px solid #e0e0e0; }
+            table { box-shadow: none; font-size: 11px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Изделия проекта (компактный вид)</h1>
+        <div class="date">Дата экспорта: ${date}</div>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 80px;">Фото</th>
+                <th>Наименование</th>
+                <th>Артикул</th>`;
+                    
+                    this.customColumns.forEach(col => {
+                        html += `<th>${col.name}</th>`;
+                    });
+                    
+                    html += `<th style="width: 280px;">Вопросы</th></tr></thead><tbody>`;
+                    
+                    this.products.forEach(product => {
+                        html += '<tr>';
+                        
+                        // Только первое изображение
+                        html += '<td>';
+                        if (product.images && product.images.length > 0) {
+                            html += `<img src="${product.images[0]}" class="compact-image" alt="Фото">`;
+                        } else {
+                            html += '<span style="color: #ccc;">—</span>';
+                        }
+                        html += '</td>';
+                        
+                        html += `
+                            <td><strong>${product.name || ''}</strong></td>
+                            <td>${product.article || ''}</td>
+                        `;
+                        
+                        // Кастомные столбцы
+                        this.customColumns.forEach(col => {
+                            const value = product.customFields?.[col.id] || '';
+                            if (col.type === 'link' && value) {
+                                // Сокращаем длинные ссылки
+                                const shortLink = value.length > 30 ? value.substring(0, 27) + '...' : value;
+                                html += `<td><a href="${value}" target="_blank" style="font-size: 11px;">${shortLink}</a></td>`;
+                            } else if (col.type === 'image' && value) {
+                                html += `<td><img src="${value}" style="width: 40px; height: 40px; object-fit: cover; border-radius: 4px;"></td>`;
+                            } else {
+                                html += `<td>${value}</td>`;
+                            }
+                        });
+                        
+                        // Вопросы - компактно
+                        html += '<td><div class="questions-compact">';
+                        if (product.questions) {
+                            let questionCount = 0;
+                            for (let [question, checked] of Object.entries(product.questions)) {
+                                // Сокращаем вопросы до 35 символов
+                                const shortQuestion = question.length > 35 ? 
+                                    question.substring(0, 32) + '...' : question;
+                                html += `<div class="question-compact ${checked ? 'checked' : 'unchecked'}">
+                                    ${checked ? '✓' : '○'} ${shortQuestion}
+                                </div>`;
+                                questionCount++;
+                                // Максимум 5 вопросов
+                                if (questionCount >= 5) {
+                                    const remaining = Object.keys(product.questions).length - 5;
+                                    if (remaining > 0) {
+                                        html += `<div style="color: #999; font-size: 11px; margin-top: 4px;">+${remaining} ещё...</div>`;
+                                    }
+                                    break;
+                                }
+                            }
+                        } else {
+                            html += '<span style="color: #ccc;">—</span>';
+                        }
+                        html += '</div></td></tr>';
+                    });
+                    
+                    html += '</tbody></table>';
+                    
+                } else if (viewType === 'hybrid') {
                     html += `
         .product-card {
             background: white;
