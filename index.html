@@ -127,6 +127,81 @@
             -webkit-backdrop-filter: blur(20px);
         }
 
+        /* Блок задач архитектора/менеджера */
+        .architect-tasks-section {
+            background: #fff9e6;
+            border: 2px solid #ffd700;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            margin: 24px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .architect-tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #ffd700;
+        }
+
+        .architect-tasks-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #b8860b;
+        }
+
+        .architect-tasks-content {
+            display: grid;
+            gap: 8px;
+        }
+
+        .architect-task-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px;
+            background: white;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+
+        .architect-task-item:hover {
+            background: #fffdf5;
+        }
+
+        .architect-task-item input[type="checkbox"] {
+            margin-top: 2px;
+        }
+
+        .architect-task-text {
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .edit-architect-tasks-btn {
+            background: white;
+            border: 1px solid #ffd700;
+            color: #b8860b;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .edit-architect-tasks-btn:hover {
+            background: #ffd700;
+            color: white;
+        }
+
+        /* Фильтрация и поиск */
+
         /* Выпадающее меню */
         .dropdown {
             position: relative;
@@ -1198,6 +1273,24 @@
         </div>
     </div>
 
+    <!-- Задачи архитектора и/или менеджера -->
+    <div class="architect-tasks-section" id="architectTasksSection">
+        <div class="architect-tasks-header">
+            <div class="architect-tasks-title">
+                <span>⭐</span>
+                <span>Задачи архитектора и/или менеджера</span>
+            </div>
+            <button class="edit-architect-tasks-btn" onclick="app.showArchitectTasksModal()">
+                ✏️ Редактировать
+            </button>
+        </div>
+        <div class="architect-tasks-content" id="architectTasksContent">
+            <p style="color: #999; text-align: center; padding: 20px;">
+                Нажмите "Редактировать" чтобы добавить задачи
+            </p>
+        </div>
+    </div>
+
     <!-- Контейнер для гибридного вида -->
     <div class="products-grid" id="productsGrid">
         <!-- Карточки будут добавлены динамически -->
@@ -1283,6 +1376,34 @@
             </div>
             <div class="modal-body">
                 <div class="image-gallery" id="galleryView"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальное окно задач архитектора -->
+    <div class="modal" id="architectTasksModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⭐ Задачи архитектора и/или менеджера</h3>
+                <button class="close-btn" onclick="app.closeModal('architectTasksModal')">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Добавьте задачи (каждая с новой строки)</label>
+                    <textarea class="form-textarea" id="architectTasksTextarea" 
+                              placeholder="Согласовать чертеж с заказчиком
+Уточнить размеры помещения
+Подобрать фурнитуру
+Получить образцы материалов" 
+                              style="min-height: 200px;"></textarea>
+                    <small style="color: #666; font-size: 12px; margin-top: 5px; display: block;">
+                        💡 Эти задачи будут отображаться сверху, над списком изделий
+                    </small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" onclick="app.closeModal('architectTasksModal')">Отмена</button>
+                <button class="btn btn-primary" onclick="app.saveArchitectTasks()">Сохранить</button>
             </div>
         </div>
     </div>
@@ -1374,6 +1495,7 @@
             db: null,
             products: [],
             customColumns: [],
+            architectTasks: {},
             currentEditId: null,
             sortColumn: null,
             sortDirection: 'asc',
@@ -1384,13 +1506,15 @@
                 await this.initDB();
                 await this.loadCustomColumns();
                 await this.loadProducts();
+                await this.loadArchitectTasks();
                 this.render();
+                this.renderArchitectTasks();
                 this.registerServiceWorker();
             },
 
             async initDB() {
                 return new Promise((resolve, reject) => {
-                    const request = indexedDB.open('ProductDB', 1);
+                    const request = indexedDB.open('ProductDB', 2);
                     
                     request.onerror = () => reject(request.error);
                     request.onsuccess = () => {
@@ -1407,6 +1531,10 @@
                         
                         if (!db.objectStoreNames.contains('columns')) {
                             db.createObjectStore('columns', { keyPath: 'id' });
+                        }
+                        
+                        if (!db.objectStoreNames.contains('projectData')) {
+                            db.createObjectStore('projectData', { keyPath: 'key' });
                         }
                     };
                 });
@@ -1439,6 +1567,88 @@
                     };
                     request.onerror = () => reject(request.error);
                 });
+            },
+
+            async loadArchitectTasks() {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['projectData'], 'readonly');
+                    const objectStore = transaction.objectStore('projectData');
+                    const request = objectStore.get('architectTasks');
+                    
+                    request.onsuccess = () => {
+                        this.architectTasks = request.result?.value || {};
+                        resolve();
+                    };
+                    request.onerror = () => reject(request.error);
+                });
+            },
+
+            async saveArchitectTasksData() {
+                return new Promise((resolve, reject) => {
+                    const transaction = this.db.transaction(['projectData'], 'readwrite');
+                    const objectStore = transaction.objectStore('projectData');
+                    const request = objectStore.put({ 
+                        key: 'architectTasks', 
+                        value: this.architectTasks 
+                    });
+                    
+                    request.onsuccess = () => resolve();
+                    request.onerror = () => reject(request.error);
+                });
+            },
+
+            showArchitectTasksModal() {
+                const tasksText = Object.keys(this.architectTasks).join('\n');
+                document.getElementById('architectTasksTextarea').value = tasksText;
+                document.getElementById('architectTasksModal').classList.add('active');
+            },
+
+            async saveArchitectTasks() {
+                const text = document.getElementById('architectTasksTextarea').value;
+                const newTasks = {};
+                
+                if (text.trim()) {
+                    text.split('\n')
+                        .filter(t => t.trim())
+                        .forEach(task => {
+                            const trimmed = task.trim();
+                            newTasks[trimmed] = this.architectTasks[trimmed] || false;
+                        });
+                }
+                
+                this.architectTasks = newTasks;
+                await this.saveArchitectTasksData();
+                this.renderArchitectTasks();
+                this.closeModal('architectTasksModal');
+                this.showStatus('Задачи сохранены');
+            },
+
+            async toggleArchitectTask(taskName) {
+                this.architectTasks[taskName] = !this.architectTasks[taskName];
+                await this.saveArchitectTasksData();
+                this.renderArchitectTasks();
+            },
+
+            renderArchitectTasks() {
+                const container = document.getElementById('architectTasksContent');
+                const section = document.getElementById('architectTasksSection');
+                
+                if (Object.keys(this.architectTasks).length === 0) {
+                    container.innerHTML = '<p style="color: #999; text-align: center; padding: 20px;">Нажмите "Редактировать" чтобы добавить задачи</p>';
+                    return;
+                }
+                
+                let html = '';
+                for (let [task, checked] of Object.entries(this.architectTasks)) {
+                    html += `
+                        <div class="architect-task-item">
+                            <input type="checkbox" ${checked ? 'checked' : ''} 
+                                   onchange="app.toggleArchitectTask('${this.escapeHtml(task)}')">
+                            <span class="architect-task-text">${task}</span>
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
             },
 
             async saveProduct(product) {
@@ -1678,6 +1888,8 @@
                 imagesHtml += `<div class="table-add-image-btn" onclick="app.addImageToProduct('${product.id}')">+</div></div></td>`;
                 
                 let questionsHtml = '<div class="table-checkbox-container">';
+                
+                // Вопросы по изделию
                 if (product.questions) {
                     let questionIndex = 0;
                     for (let [question, checked] of Object.entries(product.questions)) {
@@ -2167,6 +2379,7 @@
                         row.push(product.customFields?.[col.id] || '');
                     });
                     
+                    // Вопросы по изделию
                     const questions = [];
                     if (product.questions) {
                         for (let [q, checked] of Object.entries(product.questions)) {
@@ -2211,10 +2424,11 @@
 
             async backup() {
                 const backup = {
-                    version: 1,
+                    version: 2,
                     date: new Date().toISOString(),
                     products: this.products,
-                    columns: this.customColumns
+                    columns: this.customColumns,
+                    architectTasks: this.architectTasks
                 };
                 
                 const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
@@ -2257,9 +2471,16 @@
                             await columnStore.add(column);
                         }
                         
+                        // Восстановление задач архитектора
+                        if (backup.architectTasks) {
+                            this.architectTasks = backup.architectTasks;
+                            await this.saveArchitectTasksData();
+                        }
+                        
                         await this.loadCustomColumns();
                         await this.loadProducts();
                         this.render();
+                        this.renderArchitectTasks();
                         
                         this.showStatus('Данные восстановлены');
                     } catch (error) {
@@ -2364,7 +2585,30 @@
     <div class="header">
         <h1>Изделия проекта (компактный вид)</h1>
         <div class="date">Дата экспорта: ${date}</div>
-    </div>
+    </div>`;
+                    
+                    // Задачи архитектора/менеджера - компактно
+                    if (Object.keys(this.architectTasks).length > 0) {
+                        html += `
+    <div style="background: #fff9e6; border: 1px solid #ffd700; border-radius: 8px; padding: 12px; margin: 16px 0; font-size: 12px;">
+        <div style="font-weight: 600; color: #b8860b; margin-bottom: 6px;">⭐ Задачи архитектора/менеджера</div>`;
+                        let taskCount = 0;
+                        for (let [task, checked] of Object.entries(this.architectTasks)) {
+                            const shortTask = task.length > 50 ? task.substring(0, 47) + '...' : task;
+                            html += `<div class="${checked ? 'checked' : 'unchecked'}" style="margin: 2px 0;">${checked ? '✓' : '○'} ${shortTask}</div>`;
+                            taskCount++;
+                            if (taskCount >= 5) {
+                                const remaining = Object.keys(this.architectTasks).length - 5;
+                                if (remaining > 0) {
+                                    html += `<div style="color: #999; font-size: 11px; margin-top: 4px;">+${remaining} ещё...</div>`;
+                                }
+                                break;
+                            }
+                        }
+                        html += `</div>`;
+                    }
+                    
+                    html += `
     <table>
         <thead>
             <tr>
@@ -2411,6 +2655,8 @@
                         
                         // Вопросы - компактно
                         html += '<td><div class="questions-compact">';
+                        
+                        // Вопросы по изделию
                         if (product.questions) {
                             let questionCount = 0;
                             for (let [question, checked] of Object.entries(product.questions)) {
@@ -2558,6 +2804,26 @@
         <div class="date">Дата экспорта: ${date}</div>
     </div>`;
                     
+                    // Задачи архитектора/менеджера
+                    if (Object.keys(this.architectTasks).length > 0) {
+                        html += `
+    <div style="background: #fff9e6; border: 2px solid #ffd700; border-radius: 12px; padding: 24px; margin: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 2px solid #ffd700;">
+            <span style="font-size: 20px;">⭐</span>
+            <span style="font-size: 18px; font-weight: 600; color: #b8860b;">Задачи архитектора и/или менеджера</span>
+        </div>`;
+                        for (let [task, checked] of Object.entries(this.architectTasks)) {
+                            html += `
+        <div style="display: flex; gap: 12px; padding: 10px; background: white; border-radius: 8px; margin-bottom: 8px;">
+            <span style="color: ${checked ? 'green' : '#999'}; font-weight: 500; font-size: 16px;">${checked ? '✓' : '○'}</span>
+            <span style="line-height: 1.5; ${checked ? 'color: #333;' : 'color: #666;'}">${task}</span>
+        </div>`;
+                        }
+                        html += `</div>`;
+                    }
+                    
+                    html += ``;
+                    
                     this.products.forEach(product => {
                         const totalQuestions = product.questions ? Object.keys(product.questions).length : 0;
                         const answeredQuestions = product.questions ? 
@@ -2692,7 +2958,26 @@
     <div class="header">
         <h1>Изделия проекта</h1>
         <div class="date">Дата экспорта: ${date}</div>
-    </div>
+    </div>`;
+                    
+                    // Задачи архитектора/менеджера
+                    if (Object.keys(this.architectTasks).length > 0) {
+                        html += `
+    <div style="background: #fff9e6; border: 2px solid #ffd700; border-radius: 12px; padding: 20px; margin: 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #ffd700;">
+            <span style="font-size: 18px;">⭐</span>
+            <span style="font-size: 16px; font-weight: 600; color: #b8860b;">Задачи архитектора и/или менеджера</span>
+        </div>`;
+                        for (let [task, checked] of Object.entries(this.architectTasks)) {
+                            html += `
+        <div class="question-item ${checked ? 'checked' : 'unchecked'}">
+            ${checked ? '✓' : '✗'} ${task}
+        </div>`;
+                        }
+                        html += `</div>`;
+                    }
+                    
+                    html += `
     <table>
         <thead>
             <tr>
@@ -2738,6 +3023,8 @@
                         });
                         
                         html += '<td>';
+                        
+                        // Вопросы по изделию
                         if (product.questions) {
                             for (let [question, checked] of Object.entries(product.questions)) {
                                 html += `<div class="question-item ${checked ? 'checked' : 'unchecked'}">
@@ -2967,6 +3254,7 @@
                 customFields: {}
             };
             
+            // Вопросы по изделию
             const questionsText = document.getElementById('productQuestions').value;
             if (questionsText) {
                 const questions = questionsText.split('\n').filter(q => q.trim());
